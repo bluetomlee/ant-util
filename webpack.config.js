@@ -1,19 +1,16 @@
-var webpack = require('webpack');
-var glob = require('glob');
-var fs = require('fs');
-var path = require('path');
+const glob = require('glob')
 
 module.exports = {
   entry: glob.sync('./src/*.js'),
   output: {
-    filename: "index.js"
+    filename: 'index.js',
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/}
-    ]
+      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+    ],
   },
-  resolve:{
-    extensions:['','.js','.json']
-  }
-};
+  resolve: {
+    extensions: ['', '.js', '.json'],
+  },
+}
