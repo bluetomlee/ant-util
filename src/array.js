@@ -23,6 +23,12 @@ const findColumn = (datas, columns) => datas.map(data => pick(data, columns))
 
 const asname = (table, newNames) => table.map(data => rename(data, newNames))
 
+const last = datas => datas[datas.length - 1]
+
+const average = array => array.reduce((prev, next) => prev + next) / array.length
+
+const averageDynmic = fun => n => average([n].concat(fun(n)))
+
 const findWhere = (datas, handle) => datas.filter(data => handle(data))
 
 const findEqual = (datas, where) => {
@@ -51,6 +57,9 @@ export {
   object,
   findColumn,
   asname,
+  last,
+  averageDynmic,
+  average,
   findWhere,
   findEqual,
   defaults,

@@ -21,6 +21,10 @@ const all = (...funs) => condition => funs.reduce((truth, fun) => (truth && fun(
 
 const any = (...funs) => condition => funs.reduce((truth, fun) => (truth || fun() === condition), false)
 
+const bindAll = (obj, ...funs) => funs.map(fun => obj[fun] = obj[fun].bind(obj))
+
+const complement = fun => (...args) => !fun(...args)
+
 const propExecer = (target, name) => (...args) => {
   const action = target[name]
   return execer(action, () => {
@@ -38,5 +42,7 @@ export {
   divider,
   all,
   any,
+  bindAll,
+  complement,
   propExecer,
 }
