@@ -2,7 +2,10 @@
  * 对象操作
  * */
 const keys = Object.keys
+const toString = Object.prototype.toString
 const identity = value => value
+
+const typeChecker = data => type => (!type || toString.call(data) === `[object ${type}]`)
 
 const reduce = (obj, handler, initial = {}) => keys(obj).reduce((last, key) => handler(last, obj[key], key), initial)
 
@@ -32,6 +35,13 @@ const truthy = obj => existy(obj) && (typeof obj === 'object' ? !!Object.keys(ob
 
 const zip = (zipKeys, zipValues) => zipKeys.reduce((last, key, index) => ({ ...last, [key]: zipValues[index] }), {})
 
+const mergeDefault = (object, defaultValue) => ({ ...defaultValue, ...object })
+
+const different = (a, b) => reduce(b, (last, value, key) =>
+  (value !== a[key] ? last.concat({ key, value }) : last), [])
+
+const shallowEqual = (a, b) => different(a, b).length === 0
+
 const walk = (obj, childrenName, handler, i = 0, parentPath = []) => {
   const customPath = handler(obj, i, parentPath)
   if (obj[childrenName] !== undefined && Array.isArray(obj[childrenName])) {
@@ -40,7 +50,6 @@ const walk = (obj, childrenName, handler, i = 0, parentPath = []) => {
   }
 }
 
-/* 返回对象新列名 */
 const rename = (data, newNames) =>
   reduce(newNames, (last, newName, oldName) => {
     if (data[oldName] !== undefined) {
@@ -50,7 +59,27 @@ const rename = (data, newNames) =>
     return last
   }, { ...data })
 
+const deepEach = (obj, fn) =>
+  Object.keys(obj).forEach((k) => {
+    fn(obj[k], k)
+    if (typeof obj[k] === 'object') {
+      deepEach(obj[k], fn)
+    }
+  })
+
+const removeItem = (obj, item) => {
+  if (Array.isArray(obj)) {
+    obj.splice(obj.indexOf(item), 1)
+  }
+  Object.keys(obj).forEach((k) => {
+    if (obj[k] === item) {
+      delete obj[k]
+    }
+  })
+}
+
 export {
+  typeChecker,
   each,
   reduce,
   filter,
@@ -62,10 +91,14 @@ export {
   omit,
   pick,
   walk,
+  mergeDefault,
+  different,
+  shallowEqual,
   existy,
   truthy,
   zip,
   remove,
   rename,
+  removeItem,
 }
 

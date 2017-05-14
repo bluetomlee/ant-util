@@ -21,9 +21,15 @@ const all = (...funs) => condition => funs.reduce((truth, fun) => (truth && fun(
 
 const any = (...funs) => condition => funs.reduce((truth, fun) => (truth || fun() === condition), false)
 
+const binds = (target, methods) => methods.forEach(methodName => target[methodName] = target[methodName].bind(target))
+
 const bindAll = (obj, ...funs) => funs.map(fun => obj[fun] = obj[fun].bind(obj))
 
 const complement = fun => (...args) => !fun(...args)
+
+const isAsyncFn = (fn = () => {}) => /^async/.test(fn.name || '')
+
+const separate = fn => (...argv) => fn.call(this, ...argv)
 
 const propExecer = (target, name) => (...args) => {
   const action = target[name]
@@ -42,7 +48,10 @@ export {
   divider,
   all,
   any,
+  binds,
   bindAll,
   complement,
+  isAsyncFn,
+  separate,
   propExecer,
 }

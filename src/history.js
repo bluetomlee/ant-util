@@ -1,3 +1,5 @@
+import { last } from './array'
+
 // 动态作用域，任何JS核心引擎中，有个全局查找表
 const globals = {}
 
