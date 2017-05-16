@@ -1,12 +1,12 @@
 {
   "name": "ant-util",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ant工具组件",
   "main": "lib/index.js",
   "scripts": {
     "dev": "babel src -d lib",
     "start": "npm run dev",
-    "build": "webpack"
+    "lint": "npm run  lint"
   },
   "author": "",
   "license": "ISC",
