@@ -4,7 +4,7 @@ an javascript function expressions util and includes some practical function use
 
 ### document
 
-[ant-util文档手册][1]
+[ant-util document][1]
 
 *文档持续建设中...*
 
