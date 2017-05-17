@@ -6,7 +6,7 @@ an javascript function expressions util and includes some practical function use
 
 [ant-util document][1]
 
-*文档持续建设中...*
+*document building...*
 
 ### Features
 
