@@ -37,10 +37,10 @@ import { map } from 'ant-util/lib/object'
 ```
 
 ### Development
-
+```
 $ git clone https://github.com/antgod/ant-util.git
 $ cd ant-util && npm install
-
+```
 ### Catalog
 
 * [array][2]
