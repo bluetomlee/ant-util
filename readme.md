@@ -4,9 +4,9 @@ an javascript function expressions util and includes some practical function use
 
 ### document
 
-```
-coding...
-```
+[ant-util文档手册][1]
+
+*文档持续建设中...*
 
 ### Features
 
@@ -43,11 +43,22 @@ $ cd ant-util && npm install
 
 ### Catalog
 
-* array
-* async
-* dom
-* functions
-* histroy
-* middleware
-* object
-* string
+* [array][2]
+* [async][3]
+* [dom][4]
+* [functions][5]
+* [histroy][6]
+* [middleware][7]
+* [object][8]
+* [string][9]
+
+
+  [1]: https://antgod.gitbooks.io/ant-util/
+  [2]: https://antgod.gitbooks.io/ant-util/array.html
+  [3]: https://antgod.gitbooks.io/ant-util/async.html
+  [4]: https://antgod.gitbooks.io/ant-util/dom.html
+  [5]: https://antgod.gitbooks.io/ant-util/functions.html
+  [6]: https://antgod.gitbooks.io/ant-util/history.html
+  [7]: https://antgod.gitbooks.io/ant-util/middleware
+  [8]: https://antgod.gitbooks.io/ant-util/object.html
+  [9]: https://antgod.gitbooks.io/ant-util/string.html
