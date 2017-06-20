@@ -47,7 +47,6 @@ const exchange = (arr, start, end) => {
   return arr
 }
 
-
 const indexBy = (arr, indexKey) =>
   arr.reduce((output, current) => {
     output[current[indexKey]] = current

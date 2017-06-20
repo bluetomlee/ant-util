@@ -3,55 +3,70 @@
  * */
 import { existy } from './object'
 
-const translate = string => new Function(`return ${string}`)()
+/* 加工 */
+const translate = fun => new Function(`return ${fun}`)()
 
+/* 执行 */
 const compose = (first, ...last) => (...initArgs) => last.reduce((composed, func) => func(composed), first(...initArgs))
 
-const concat = (...funcs) => (...args) => funcs.reduce((returns, func) => [...returns, func(...args)], [])
-
-const switcher = map => (type, ...args) => map[type] !== undefined ? map[type](...args) : undefined
+const concat = (...funs) => (...args) => funs.reduce((returns, fun) => [...returns, fun(...args)], [])
 
 const some = (...funs) => (...args) => funs.reduce((last, fun) => last === undefined ? fun(...args) : last, undefined)
 
-const execer = (condition, action) => (...args) => existy(condition) ? action(...args) : undefined
+const invoke = (obj, fun, ...args) => obj[fun] !== undefined ? obj[fun](...args) : undefined
 
-const divider = actions => (...args) => actions.map(({ condition, action, name }) => ({ name, value: execer(condition, action)(...args) }))
-
+/* 判断 */
 const all = (...funs) => condition => funs.reduce((truth, fun) => (truth && fun() === condition), true)
 
 const any = (...funs) => condition => funs.reduce((truth, fun) => (truth || fun() === condition), false)
 
-const binds = (target, methods) => methods.forEach(methodName => target[methodName] = target[methodName].bind(target))
+/* 绑定 */
+const binds = (origin, methods, target) => methods.forEach(methodName => origin[methodName] = origin[methodName].bind(target || origin))
 
-const bindAll = (obj, ...funs) => funs.map(fun => obj[fun] = obj[fun].bind(obj))
+/* 执行 */
+const exec = (condition, handle) => (...args) => existy(condition) ? handle(...args) : undefined
 
-const complement = fun => (...args) => !fun(...args)
+const match = actions => (...args) => actions.map(({ condition, action }) => (exec(condition, action)(...args)))
 
-const isAsyncFn = (fn = () => {}) => /^async/.test(fn.name || '')
-
-const separate = fn => (...argv) => fn.call(this, ...argv)
-
-const propExecer = (target, name) => (...args) => {
-  const action = target[name]
-  return execer(action, () => {
-    return typeof action === 'function' ? action.apply(target, args) : action
-  })()
+const exer = (origin, name) => (...args) => {
+  const action = origin[name]
+  return exec(action, () => typeof action === 'function' ? action(...args) : action)()
 }
+
+/* 柯里化 */
+const sep = fun => (...args) => fun.call(this, ...args)
+
+const inject = (fun, createArgsToInject, spread = false) => (...args) => {
+  const injectArgs = createArgsToInject(...args)
+  return spread ? fun(...injectArgs, ...args) : fun(injectArgs, ...args)
+}
+
+const grund = (fun, checker, message) => (...args) => {
+  if (!checker(...args)) {
+    throw new Error(message || '参数不正确')
+  }
+  return fun(...args)
+}
+
+const partial = (fun, ...rest) => (...argv) => fun.call(this, ...argv, ...rest)
+
+const partialLeft = (fun, ...rest) => (...argv) => fun.call(this, ...rest, ...argv)
 
 export {
   translate,
   compose,
   concat,
-  switcher,
   some,
-  execer,
-  divider,
+  invoke,
   all,
   any,
   binds,
-  bindAll,
-  complement,
-  isAsyncFn,
-  separate,
-  propExecer,
+  exec,
+  match,
+  exer,
+  sep,
+  inject,
+  grund,
+  partial,
+  partialLeft,
 }
