@@ -29,9 +29,9 @@ const remove = (obj, item) => Object.keys(obj).forEach(k => obj[k] === item && d
 
 const each = (obj, fn) => keys(obj).forEach(k => (fn && fn(obj[k], k)))
 
-const existy = obj => !!obj
+const exist = obj => !!obj
 
-const truthy = obj => existy(obj) && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
+const truthy = obj => exist(obj) && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
 
 const zip = (zipKeys, zipValues) => zipKeys.reduce((last, key, index) => ({ ...last, [key]: zipValues[index] }), {})
 
@@ -94,7 +94,7 @@ export {
   mergeDefault,
   different,
   shallowEqual,
-  existy,
+  exist,
   truthy,
   zip,
   remove,

@@ -41,11 +41,13 @@ const inject = (fun, createArgsToInject, spread = false) => (...args) => {
   return spread ? fun(...injectArgs, ...args) : fun(injectArgs, ...args)
 }
 
-const grund = (fun, checker, message) => (...args) => {
-  if (!checker(...args)) {
-    throw new Error(message || '参数不正确')
+const grund = (checker, handle, errorCallback = args => args) => (...args) => {
+  const result = checker(...args)
+  if (result.length) {
+    errorCallback(result)
+  } else {
+    return handle(...args)
   }
-  return fun(...args)
 }
 
 const partial = (fun, ...rest) => (...argv) => fun.call(this, ...argv, ...rest)
