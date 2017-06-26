@@ -1,7 +1,7 @@
 /*
  * 函数操作
  * */
-import { existy } from './object'
+import { exist } from './object'
 
 /* 加工 */
 const translate = fun => new Function(`return ${fun}`)()
@@ -24,7 +24,7 @@ const any = (...funs) => condition => funs.reduce((truth, fun) => (truth || fun(
 const binds = (origin, methods, target) => methods.forEach(methodName => origin[methodName] = origin[methodName].bind(target || origin))
 
 /* 执行 */
-const exec = (condition, handle) => (...args) => existy(condition) ? handle(...args) : undefined
+const exec = (condition, handle) => (...args) => exist(condition) ? handle(...args) : undefined
 
 const match = actions => (...args) => actions.map(({ condition, action }) => (exec(condition, action)(...args)))
 
