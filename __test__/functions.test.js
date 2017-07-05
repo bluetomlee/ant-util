@@ -16,7 +16,7 @@ const {
   inject,
   grund,
   partial,
-  partialLeft,
+  partialRight,
 } = util
 
 // 函数字符串转函数
@@ -243,11 +243,11 @@ test('partial', () => {
 })
 
 // 在原函数参数左侧注入参数
-test('partialLeft', () => {
+test('partialRight', () => {
   const fn = (...args) => {
     console.log(...args)
     return true
   }
 
-  expect([1, 2, 3].map(partialLeft(fn, 'argsrest'))).toEqual([true, true, true])
+  expect([1, 2, 3].map(partialRight(fn, 'argsrest'))).toEqual([true, true, true])
 })

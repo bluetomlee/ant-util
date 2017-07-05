@@ -50,9 +50,9 @@ const grund = (checker, handle, errorCallback = args => args) => (...args) => {
   }
 }
 
-const partial = (fun, ...rest) => (...argv) => fun.call(this, ...argv, ...rest)
+const partial = (fun, ...argv) => (...rest) => fun.call(this, ...argv, ...rest)
 
-const partialLeft = (fun, ...rest) => (...argv) => fun.call(this, ...rest, ...argv)
+const partialRight = (fun, ...argv) => (...rest) => fun.call(this, ...rest, ...argv)
 
 export {
   translate,
@@ -70,5 +70,5 @@ export {
   inject,
   grund,
   partial,
-  partialLeft,
+  partialRight,
 }
