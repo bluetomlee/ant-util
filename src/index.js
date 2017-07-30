@@ -1,10 +1,10 @@
-// import * as dom from './dom'
-import * as array from './array'
-import * as async from './async'
-import * as functions from './functions'
-import * as history from './history'
-import * as middleware from './middleware'
-import * as object from './object'
-import * as string from './string'
+import * as array from './core/array'
+import * as functions from './core/functions'
+import * as object from './core/object'
+import * as string from './core/string'
+
+import * as async from './plugins/async'
+import * as history from './plugins/history'
+import * as middleware from './plugins/middleware'
 
 export default { ...array, ...async, ...functions, ...history, ...middleware, ...object, ...string }

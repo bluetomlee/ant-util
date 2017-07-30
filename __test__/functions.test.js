@@ -1,7 +1,9 @@
 import util from '../src/index'
 
+// 函数API
 const {
   translate,
+  always,
   compose,
   concat,
   some,
@@ -10,244 +12,307 @@ const {
   any,
   binds,
   exec,
-  match,
   exer,
-  sep,
+  match,
+  curry,
   inject,
   grund,
   partial,
   partialRight,
 } = util
 
+// 其他函数
+const {
+  repeatness,
+} = util
+
+const returnCreator = (handle, args) => `${handle} function ${args} return value`
+const returnAPICreator = (handle, functions) => functions.reduce((final, fun) => ({ ...final, [`${fun}`]: returnCreator(handle, fun) }), {})
+
 // 函数字符串转函数
 test('translate', () => {
-  const test = "function a() { return 'test'}"
-  expect(translate(test)()).toEqual('test')
+  let result = null
+
+  // 最简单的用法
+  const functionStringSimple = "function handle() { return 'my name is ant'}"
+  result = translate(functionStringSimple)()
+  expect(result).toEqual('my name is ant')
+
+  // 带参数与返回值的函数
+  const functionStringCommon = "function handle(prop, value) { return 'my ' + prop + ' is ' + value}"
+  result = translate(functionStringCommon)('name', 'ant')
+  expect(result).toEqual('my name is ant')
+
+  // 动态参数的函数
+  const handleDynmicArgs = prop => `function handle(value) { return 'my ' + '${prop}' + ' is ' + value}`
+  result = translate(handleDynmicArgs('name'))('ant')
+  expect(result).toEqual('my name is ant')
 })
 
-// 合并
+// 用来创建指定返回值的函数
+test('always', () => {
+  expect(repeatness(always('Odelay'), 3)).toEqual(['Odelay', 'Odelay', 'Odelay'])
+})
+
+// 组合函数
 test('compose', () => {
-  const fn1 = (...args) => {
+  const returns = returnAPICreator('compose', ['first', 'second', 'third'])
+
+  const first = (...args) => {
     console.log(...args)
-    return 'fn1'
+    return returns.first
   }
-  const fn2 = (...args) => {
+  const second = (...args) => {
     console.log(...args)
-    return 'fn2'
+    return returns.second
   }
-  const fn3 = (...args) => {
+  const third = (...args) => {
     console.log(...args)
-    return 'fn3'
+    return returns.third
   }
 
-  expect(compose(fn1, fn2, fn3)('init')).toEqual('fn3')
+  // 依次执行first, second, third函数，传入初始化参数到第一个函数，把每个函数的返回值传入下个函数的参数，返回最后一个函数的返回值
+  expect(compose(first, second, third)('compose function initiation args')).toEqual(returns.third)
 })
 
-// 连接
+// 连接函数
 test('concat', () => {
-  const fn1 = (...args) => {
+  const returns = returnAPICreator('concat', ['first', 'second', 'third'])
+
+  const first = (...args) => {
     console.log(...args)
-    return 'fn1'
+    return returns.first
   }
-  const fn2 = (...args) => {
+  const second = (...args) => {
     console.log(...args)
-    return 'fn2'
+    return returns.second
   }
-  const fn3 = (...args) => {
+  const third = (...args) => {
     console.log(...args)
-    return 'fn3'
+    return returns.third
   }
 
-  expect(concat(fn1, fn2, fn3)('init')).toEqual(['fn1', 'fn2', 'fn3'])
+  // 依次执行first, second, third函数，传入初始化参数，返回所有函数的返回值数组
+  expect(concat(first, second, third)('concat function initiation args')).toEqual([returns.first, returns.second, returns.third])
 })
 
-// 检测有返回的函数返回
+// 返回第一个有返回值的函数的返回值
 test('some', () => {
-  const fn1 = (...args) => {
+  const returns = returnAPICreator('some', ['first', 'second', 'third'])
+  const first = (...args) => {
     console.log(...args)
-    return 'fn1'
   }
-  const fn2 = (...args) => {
+  const second = (...args) => {
     console.log(...args)
-    return 'fn2'
+    return returns.second
   }
-  const fn3 = (...args) => {
+  const third = (...args) => {
     console.log(...args)
-    return 'fn3'
+    return returns.third
   }
 
-  expect(some(fn1, fn2, fn3)('init')).toEqual('fn1')
+  // 返回第一个有返回的函数second的返回值
+  expect(some(first, second, third)('some function initiation args')).toEqual(returns.second)
 })
 
 // 反射执行
 test('invoke', () => {
-  const fn1 = (...args) => {
+  const returns = returnAPICreator('invoke', ['first', 'second', 'third'])
+
+  const first = (...args) => {
     console.log(...args)
-    return 'fn1'
+    return returns.first
   }
-  const fn2 = (...args) => {
+  const second = (...args) => {
     console.log(...args)
-    return 'fn2'
+    return returns.second
   }
-  const fn3 = (...args) => {
+  const third = (...args) => {
     console.log(...args)
-    return 'fn3'
+    return returns.third
   }
-  const fns = { fn1, fn2, fn3 }
-  expect(invoke(fns, 'fn2', 'init')).toEqual('fn2')
+
+  const fns = { first, second, third }
+  // 执行second函数
+  expect(invoke(fns, 'second', 'invoke function initiation args')).toEqual(returns.second)
 })
 
-// 所有条件都返回true才会返回true
+// 所有函数都返回某个条件，会返回true，否则返回false
 test('all', () => {
-  const fn1 = (...args) => {
+  const first = (...args) => {
     console.log(...args)
     return true
   }
-  const fn2 = (...args) => {
+  const second = (...args) => {
     console.log(...args)
     return true
   }
-  const fn3 = (...args) => {
+  const third = (...args) => {
     console.log(...args)
     return true
   }
 
-  expect(all(fn1, fn2, fn3)(true)).toEqual(true)
+  // 所有函数都返回true，最终返回true, 示例函数全部执行
+  expect(all(first, second, third)(true, 'all function initiation args')).toEqual(true)
+  // 所有条件都不会返回false, 最终返回false, 示例函数只会执行一个
+  expect(all(first, second, third)(false, 'all function initiation args')).toEqual(false)
 })
 
-// 任意一个返回false就返回true
+// 任意函数返回某个条件，会返回true，否则返回false
 test('any', () => {
-  const fn1 = (...args) => {
+  const first = (...args) => {
     console.log(...args)
     return false
   }
-  const fn2 = (...args) => {
+  const second = (...args) => {
     console.log(...args)
-    return true
+    return false
   }
-  const fn3 = (...args) => {
+  const third = (...args) => {
     console.log(...args)
     return true
   }
 
-  expect(any(fn1, fn2, fn3)(true)).toEqual(true)
+  // 任意函数返回true，最终返回true, 示例函数全部执行
+  expect(any(first, second, third)(true, 'any function initiation args')).toEqual(true)
+  // 任意函数返回false，最终返回true, 示例函数只会执行一个
+  expect(any(first, second, third)(false, 'any function initiation args')).toEqual(true)
 })
 
 // 绑定对象的指定函数
 test('binds', () => {
-  function fn1() {
+  function first() {
     return this.name
   }
-  const fns = { fn1 }
-  binds(fns, ['fn1'], { name: 'test' })
-  expect(fns.fn1()).toEqual('test')
+
+  function second() {
+    return this.name
+  }
+
+  const fns = { first, second }
+  // first函数绑定name: ant
+  binds(fns, ['first'], { name: 'ant' })
+  expect(fns.first()).toEqual('ant')
+  expect(fns.second()).toEqual(undefined)
 })
 
 // 根据某个条件执行函数
 test('exec', () => {
-  const fn = (...args) => {
+  const array = []
+
+  const conditionCreate = arr => arr.length
+
+  const callback = (...args) => {
     console.log(...args)
-    return true
+    return 'exec function return value'
   }
 
-  expect(exec(true, fn)(1, 2, 3)).toEqual(true)
-})
+  // 数组为空，不会执行回调函数
+  expect(exec(conditionCreate(array), callback)(...array)).toEqual(undefined)
 
-// 根据传入的条件集判断是否执行函数，可以完全代替if
-test('match', () => {
-  const fn1 = (...args) => {
-    console.log(...args)
-    return 'fn1'
-  }
-  const fn2 = (...args) => {
-    console.log(...args)
-    return 'fn2'
-  }
-  const fn3 = (...args) => {
-    console.log(...args)
-    return 'fn3'
-  }
-  const fns = { fn1, fn2, fn3 }
-
-  const mapperCreator = code => [
-    { condition: code === 1, action: fns.fn1 },
-    { condition: code === 2, action: fns.fn2 },
-    { condition: code > 1, action: fns.fn3 },
-  ]
-
-  expect(match(mapperCreator(2))('init')).toEqual([undefined, 'fn2', 'fn3'])
+  // 数组不为空，执行回调函数
+  array.push('exec function initiation args')
+  expect(exec(conditionCreate(array), callback)(...array)).toEqual('exec function return value')
 })
 
 // 获得对象的某个属性，如果是函数执行函数，如果是属性直接返回
 test('exer', () => {
-  const fn1 = 'fn1'
-  const fn2 = (...args) => {
+  const first = 'first'
+  const second = (...args) => {
     console.log(...args)
-    return 'fn2'
+    return 'second'
   }
-  const fns = { fn1, fn2 }
-  expect(exer(fns, 'fn1')('init')).toEqual('fn1')
-  expect(exer(fns, 'fn2')('init')).toEqual('fn2')
+  const fns = { first, second }
+  expect(exer(fns, 'first')('exer function initiation args')).toEqual('first')
+  expect(exer(fns, 'second')('exer function initiation args')).toEqual('second')
+})
+
+// 根据传入的条件集判断是否执行函数，可以完全代替if
+test('match', () => {
+  const returns = returnAPICreator('match', ['first', 'second', 'third'])
+
+  const first = (...args) => {
+    console.log(...args)
+    return returns.first
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return returns.second
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return returns.third
+  }
+  const fns = { first, second, third }
+
+  const mapCreator = code => [
+    { condition: code === 1, action: fns.first },
+    { condition: code === 2, action: fns.second },
+    { condition: code > 1, action: fns.third },
+  ]
+
+  // 执行条件 code === 2 与 code > 1的函数second， third
+  const code = 2
+  expect(match(mapCreator(code))('match function initiation args')).toEqual([undefined, returns.second, returns.third])
 })
 
 // 柯里化函数
-test('sep', () => {
+test('curry', () => {
   const fn = (...args) => {
     console.log(...args)
-    return true
+    return 'curry function return value'
   }
 
-  expect(sep(fn)('init')).toEqual(true)
+  // 拆分函数与参数
+  expect(curry(fn)('curry function initiation args')).toEqual('curry function return value')
 })
 
 // 根据传入函数的返回注入函数参数
 test('inject', () => {
-  function test(...args) {
-    console.log(...args)
-    return 2
+  const fn = (...args) => {
+    console.log('inject function final args is:', ...args)
+    return 'inject function return value'
   }
 
   function resolve(originArgs) {
-    console.log('原始参数', originArgs)
-    return 2
+    console.log('inject function origin args is:', originArgs)
+    return 'final args'
   }
 
-  expect(inject(test, resolve)(1)).toEqual(2)
+  expect(inject(fn, resolve)('origin args')).toEqual('inject function return value')
 })
 
 // 检测函数参数
 test('grund', () => {
-  function set(path, value) {
-    console.log(path, value)
-    return 'final'
+  function setValue(object, path, value) {
+    object[path] = value
+    return 'setValue success'
   }
 
-  const finalSet = grund(set, (path) => {
-    if (!path) {
-      return false
-    }
-    return true
-  })
+  const finalSet = grund((object, path) => !!object && !!path, setValue, () => console.log('grund function args error'))
 
-  expect(finalSet('a', 'a')).toEqual('final')
-})
-
-// 在原函数参数右侧注入参数
-test('partial', () => {
-  const fn = (...args) => {
-    console.log(...args)
-    return true
-  }
-
-  expect([1, 2, 3].map(partial(fn, 'argsrest'))).toEqual([true, true, true])
+  const obj = {}
+  expect(finalSet(obj, 'name', 'ant')).toEqual('setValue success')
 })
 
 // 在原函数参数左侧注入参数
-test('partialRight', () => {
+test('partial', () => {
   const fn = (...args) => {
-    console.log(...args)
+    console.log('partial function args is:', ...args)
     return true
   }
 
+  // 原来参数的左侧注入：argsrest参数
+  expect([1, 2, 3].map(partial(fn, 'argsrest'))).toEqual([true, true, true])
+})
+
+// 在原函数参数右侧注入参数
+test('partialRight', () => {
+  const fn = (...args) => {
+    console.log('partialRight function args is:', ...args)
+    return true
+  }
+
+  // 原来参数的右侧注入：argsrest参数
   expect([1, 2, 3].map(partialRight(fn, 'argsrest'))).toEqual([true, true, true])
 })

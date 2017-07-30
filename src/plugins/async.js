@@ -1,4 +1,4 @@
-import { isAsyncFn } from './functions'
+import { isAsyncFn } from '../core/functions'
 
 /*
  * 异步函数操作

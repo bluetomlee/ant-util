@@ -50,6 +50,7 @@
     "no-continue": 0,
     "no-console": 0,
     "no-new-func": 0,
+    "no-shadow": 0,
     "no-confusing-arrow": 0
   }
 }

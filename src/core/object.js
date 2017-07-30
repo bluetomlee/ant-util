@@ -7,6 +7,8 @@ const identity = value => value
 
 const typeChecker = data => type => (!type || toString.call(data) === `[object ${type}]`)
 
+const plucker = prop => item => item[prop]
+
 const reduce = (obj, handler, initial = {}) => keys(obj).reduce((last, key) => handler(last, obj[key], key), initial)
 
 const filter = (obj, handler) => reduce(obj, (last, value, key) => (handler(value, key) ? { ...last, [key]: value } : last))
@@ -79,7 +81,10 @@ const removeItem = (obj, item) => {
 }
 
 export {
+  keys,
+  identity,
   typeChecker,
+  plucker,
   each,
   reduce,
   filter,
