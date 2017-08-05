@@ -1,4 +1,4 @@
-export function offsetTop(el) {
+function offsetTop(el) {
   let top = el.offsetTop
   let parent = el.offsetParent
   while (parent !== null) {
@@ -7,7 +7,8 @@ export function offsetTop(el) {
   }
   return top
 }
-export function offsetLeft(el) {
+
+function offsetLeft(el) {
   let left = el.offsetLeft
   let parent = el.offsetParent
   while (parent !== null) {
@@ -17,7 +18,7 @@ export function offsetLeft(el) {
   return left
 }
 
-export function addEvent(el, event, handler) {
+function addEvent(el, event, handler) {
   if (!el) return
   if (el.attachEvent) {
     el.attachEvent(`on${event}`, handler)
@@ -28,7 +29,7 @@ export function addEvent(el, event, handler) {
   }
 }
 
-export function removeEvent(el, event, handler) {
+function removeEvent(el, event, handler) {
   if (!el) return
   if (el.detachEvent) {
     el.detachEvent(`on${event}`, handler)
@@ -39,7 +40,7 @@ export function removeEvent(el, event, handler) {
   }
 }
 
-export function getBrowserPrefix() {
+function getBrowserPrefix() {
   if (typeof window === 'undefined') return ''
   const styles = window.getComputedStyle(document.documentElement, '')
   const pre = (Array.prototype.slice
@@ -57,14 +58,14 @@ export function getBrowserPrefix() {
  * @param {String} key
  * @return {String}
  */
-export function getQuery(key) {
+function getQuery(key) {
   const reg = new RegExp(`(^|&)${key.toLowerCase()}=([^&]*)(&|$)`, 'i')
   const r = window.location.search.substr(1).match(reg)
   return r ? decodeURI(r[2]) : ''
 }
 
 
-export function debounce(fn, wait = 200) {
+function debounce(fn, wait = 200) {
   let timeout
   let timestamp
   let lastArgs = []
@@ -91,7 +92,7 @@ export function debounce(fn, wait = 200) {
   }
 }
 
-export function safeDecodeURIComponent(str) {
+function safeDecodeURIComponent(str) {
   try {
     return decodeURIComponent(str)
   } catch (e) {
@@ -99,7 +100,7 @@ export function safeDecodeURIComponent(str) {
   }
 }
 
-export const openWindow = (url = '') => {
+const openWindow = (url = '') => {
   if (url.indexOf('#') === 0) {
     location.hash = url
   } else {
@@ -107,21 +108,31 @@ export const openWindow = (url = '') => {
   }
 }
 
-export const skipWindow = (url) => {
+const skipWindow = (url) => {
   location.href = url
 }
 
-export const getCookie = (key) => {
-  const m = new RegExp('\\b' + key + '\\=([^]+)').exec(document.cookie)
+const go = path => history.go(path)
+
+const getCookie = (key) => {
+  const m = new RegExp(`\\b${key}\\=([^]+)`).exec(document.cookie)
   return m ? m[1] : ''
 }
 
-export const $ = document::document.querySelector
+const nextTick = (callback, delay = 0) => window.setTimeout(callback, delay)
 
-export const replace = content => (reg, handle) => content.replace(reg, handle)
-
-export const go = (path) => history.go(path)
-
-export const nextTick = (callback, delay = 0) => window.setTimeout(callback, delay)
-
-
+export {
+  offsetTop,
+  offsetLeft,
+  addEvent,
+  removeEvent,
+  getBrowserPrefix,
+  getQuery,
+  debounce,
+  safeDecodeURIComponent,
+  openWindow,
+  skipWindow,
+  go,
+  getCookie,
+  nextTick,
+}

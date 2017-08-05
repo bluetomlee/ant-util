@@ -22,4 +22,4 @@ const decorate = (decorator, fn) => {
   }
 }
 
-export { promiseChain, decorate}
+export { promiseChain, decorate }

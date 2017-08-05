@@ -1,6 +1,6 @@
 const capitalize = str => str === undefined || str.length === 0 ? str : `${str[0].toUpperCase()}${str.slice(1)}`
 
-const unique = len => Math.random().toString(36).substr(2, len)
+const uniqueString = len => Math.random().toString(36).substr(2, len)
 // console.log(uniqueString(10))
 const uniquePrefix = prefix => [prefix, new Date().getTime()].join('')
 // console.log(uniquePrefix('ghosts'))
@@ -12,10 +12,13 @@ const indexGenerator = (counter, prefix) => (pre = prefix) => [pre, counter++].j
 // console.log(g1())
 // console.log(g1('new'))
 
+const replace = content => (reg, handle) => content.replace(reg, handle)
+
 export {
   capitalize,
-  unique,
+  uniqueString,
   uniquePrefix,
   indexGenerator,
+  replace,
 }
 

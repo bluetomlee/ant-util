@@ -4,13 +4,19 @@
   "description": "ant工具组件",
   "main": "lib/index.js",
   "scripts": {
-    "deploy": "babel src -d lib",
+    "build": "webpack",
+    "babel": "babel src -d lib",
+    "deploy": "npm version patch && git add . && git commit -m 'patch devtool auto commit' && git push && npm publish",
     "start": "npm run dev",
     "test": "jest",
-    "lint": "npm run  lint",
+    "lint": "eslint src",
+    "testfunction": "npm run test __test__/function.test.js",
     "testarray": "npm run test __test__/array.test.js"
   },
-  "author": "",
+  "pre-commit": [
+    "lint"
+  ],
+  "author": "lihongji",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.7.7",
