@@ -10,8 +10,9 @@
     "start": "npm run dev",
     "test": "jest",
     "lint": "eslint src",
-    "testfunction": "npm run test __test__/functions.test.js",
-    "testarray": "npm run test __test__/array.test.js"
+    "testfunc": "npm run test __test__/functions.test.js",
+    "testarray": "npm run test __test__/array.test.js",
+    "testif": "npm run test __test__/if.test.js"
   },
   "pre-commit": [
     "lint"
