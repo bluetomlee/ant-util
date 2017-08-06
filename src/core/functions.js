@@ -9,13 +9,7 @@ const translate = (fun, ...args) => new Function(...args, `return ${fun}`)()
 /* 生成器 */
 const always = value => () => value
 
-/* 执行 */
-const compose = (first, ...last) => (...initArgs) => last.reduce((composed, func) => func(composed), first(...initArgs))
-
-const concat = (...funs) => (...args) => funs.reduce((returns, fun) => [...returns, fun(...args)], [])
-
-const some = (...funs) => (...args) => funs.reduce((last, fun) => last === undefined ? fun(...args) : last, undefined)
-
+/* 反射 */
 const invoke = (obj, fun, ...args) => obj[fun] !== undefined ? obj[fun](...args) : undefined
 
 /* 判断 */
@@ -37,7 +31,32 @@ const exer = (origin, name) => (...args) => {
 const match = actions => (...args) => actions.map(({ condition, action }) => (exec(condition, action)(...args)))
 
 /* 柯里化 */
+const compose = (first, ...last) => (...initArgs) => last.reduce((composed, func) => func(composed), first(...initArgs))
+
+const concat = (...funs) => (...args) => funs.reduce((returns, fun) => [...returns, fun(...args)], [])
+
+const some = (...funs) => (...args) => funs.reduce((last, fun) => last === undefined ? fun(...args) : last, undefined)
+
+const invoker = name => (target, ...args) => {
+  const targetMethod = target[name]
+  return exec(targetMethod, targetMethod.bind(target))(...args)
+}
+
 const curry = fun => (...args) => fun.call(this, ...args)
+
+const curry1 = fun => middle => fun(middle)
+
+const curry2 = fun => last => first => fun(first, last)
+
+const curryless = (fun) => {
+  const args = []
+  const handle = (arg) => {
+    args.push(arg)
+    handle.done = () => fun(...args.reverse())
+    return handle
+  }
+  return handle
+}
 
 const inject = (fun, createArgsToInject, spread = false) => (...args) => {
   const injectArgs = createArgsToInject(...args)
@@ -50,12 +69,11 @@ const partial = (fun, ...argv) => (...rest) => fun.call(this, ...argv, ...rest)
 
 const partialRight = (fun, ...argv) => (...rest) => fun.call(this, ...rest, ...argv)
 
+const complement = fun => (...args) => !fun(...args)
+
 export {
   translate,
   always,
-  compose,
-  concat,
-  some,
   invoke,
   all,
   any,
@@ -63,9 +81,17 @@ export {
   exec,
   exer,
   match,
+  compose,
+  concat,
+  some,
+  invoker,
   curry,
+  curry1,
+  curry2,
+  curryless,
   inject,
   grund,
   partial,
   partialRight,
+  complement,
 }

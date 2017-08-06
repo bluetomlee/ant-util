@@ -4,9 +4,6 @@ import util from '../src/index'
 const {
   translate,
   always,
-  compose,
-  concat,
-  some,
   invoke,
   all,
   any,
@@ -14,20 +11,32 @@ const {
   exec,
   exer,
   match,
+  compose,
+  concat,
+  some,
+  invoker,
   curry,
+  curry1,
+  curry2,
+  curryless,
   inject,
   grund,
   partial,
   partialRight,
+  complement,
 } = util
 
 // 其他函数
 const {
+  chain,
   repeatness,
 } = util
 
 const returnCreator = (handle, args) => `${handle} function ${args} return value`
-const returnAPICreator = (handle, functions) => functions.reduce((final, fun) => ({ ...final, [`${fun}`]: returnCreator(handle, fun) }), {})
+const returnAPICreator = (handle, functions) => functions.reduce((final, fun) => ({
+  ...final,
+  [`${fun}`]: returnCreator(handle, fun),
+}), {})
 
 // 函数字符串转函数
 test('translate', () => {
@@ -52,67 +61,6 @@ test('translate', () => {
 // 用来创建指定返回值的函数
 test('always', () => {
   expect(repeatness(always('Odelay'), 3)).toEqual(['Odelay', 'Odelay', 'Odelay'])
-})
-
-// 组合函数
-test('compose', () => {
-  const returns = returnAPICreator('compose', ['first', 'second', 'third'])
-
-  const first = (...args) => {
-    console.log(...args)
-    return returns.first
-  }
-  const second = (...args) => {
-    console.log(...args)
-    return returns.second
-  }
-  const third = (...args) => {
-    console.log(...args)
-    return returns.third
-  }
-
-  // 依次执行first, second, third函数，传入初始化参数到第一个函数，把每个函数的返回值传入下个函数的参数，返回最后一个函数的返回值
-  expect(compose(first, second, third)('compose function initiation args')).toEqual(returns.third)
-})
-
-// 连接函数
-test('concat', () => {
-  const returns = returnAPICreator('concat', ['first', 'second', 'third'])
-
-  const first = (...args) => {
-    console.log(...args)
-    return returns.first
-  }
-  const second = (...args) => {
-    console.log(...args)
-    return returns.second
-  }
-  const third = (...args) => {
-    console.log(...args)
-    return returns.third
-  }
-
-  // 依次执行first, second, third函数，传入初始化参数，返回所有函数的返回值数组
-  expect(concat(first, second, third)('concat function initiation args')).toEqual([returns.first, returns.second, returns.third])
-})
-
-// 返回第一个有返回值的函数的返回值
-test('some', () => {
-  const returns = returnAPICreator('some', ['first', 'second', 'third'])
-  const first = (...args) => {
-    console.log(...args)
-  }
-  const second = (...args) => {
-    console.log(...args)
-    return returns.second
-  }
-  const third = (...args) => {
-    console.log(...args)
-    return returns.third
-  }
-
-  // 返回第一个有返回的函数second的返回值
-  expect(some(first, second, third)('some function initiation args')).toEqual(returns.second)
 })
 
 // 反射执行
@@ -256,6 +204,107 @@ test('match', () => {
   expect(match(mapCreator(code))('match function initiation args')).toEqual([undefined, returns.second, returns.third])
 })
 
+// 组合函数
+test('compose', () => {
+  const returns = returnAPICreator('compose', ['first', 'second', 'third'])
+
+  const first = (...args) => {
+    console.log(...args)
+    return returns.first
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return returns.second
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return returns.third
+  }
+
+  // 依次执行first, second, third函数，传入初始化参数到第一个函数，把每个函数的返回值传入下个函数的参数，返回最后一个函数的返回值
+  expect(compose(first, second, third)('compose function initiation args')).toEqual(returns.third)
+
+  // string拼接器，一次执行传入数据转成string，反转与拼接前缀后缀的函数，如abc，执行后为pre-cba-end
+  const reverse = (obj) => {
+    if (typeof obj !== 'string') return obj
+    return chain({ reverse: undefined, join: '' })(obj.split(''))
+  }
+
+  const invoker = name => (target, ...args) => {
+    const targetMethod = target[name]
+    return exec(targetMethod, targetMethod.bind(target))(...args)
+  }
+
+  const fix = (prefix, suffix) => value => `${prefix}${value}${suffix}`
+
+  const str = compose(invoker('toString'), reverse, fix('pre-', '-end'))
+
+  expect(str(true)).toEqual('pre-eurt-end')
+  expect(str('abc')).toEqual('pre-cba-end')
+  expect(str(['a', 'b', 'c'])).toEqual('pre-c,b,a-end')
+})
+
+// 连接函数
+test('concat', () => {
+  const returns = returnAPICreator('concat', ['first', 'second', 'third'])
+
+  const first = (...args) => {
+    console.log(...args)
+    return returns.first
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return returns.second
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return returns.third
+  }
+
+  // 依次执行first, second, third函数，传入初始化参数，返回所有函数的返回值数组
+  expect(concat(first, second, third)('concat function initiation args')).toEqual([returns.first, returns.second, returns.third])
+
+  const isa = (type, action) => (obj, ...args) => type === obj.type ? action(obj, ...args) : undefined
+
+  const command = concat(isa('first', (obj, ...args) => {
+    console.log(args)
+    return returns.first
+  }), isa('second', (obj, ...args) => {
+    console.log(args)
+    return returns.second
+  }))
+
+  expect(command({ type: 'first' }, 'concat function initiation args')).toEqual([returns.first, undefined])
+})
+
+// 返回第一个有返回值的函数的返回值
+test('some', () => {
+  const returns = returnAPICreator('some', ['first', 'second', 'third'])
+  const first = (...args) => {
+    console.log(...args)
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return returns.second
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return returns.third
+  }
+
+  // 返回第一个有返回的函数second的返回值
+  expect(some(first, second, third)('some function initiation args')).toEqual(returns.second)
+})
+
+// 柯里化反射
+test('invoker', () => {
+  // 柯里化拆分函数与参数
+  expect(invoker('reverse')([1, 2, 3])).toEqual([3, 2, 1])
+
+  // 柯里化拆分函数与参数
+  expect(invoker('map')([1, 2, 3], item => item * 2)).toEqual([2, 4, 6])
+})
+
 // 柯里化函数
 test('curry', () => {
   const fn = (...args) => {
@@ -265,6 +314,35 @@ test('curry', () => {
 
   // 拆分函数与参数
   expect(curry(fn)('curry function initiation args')).toEqual('curry function return value')
+})
+
+// 柯里化函数参数: fun => middle => fun(middle)
+test('curry1', () => {
+  const array = [11.11, 11.22, 11.33, 11.44]
+  // 把数组的每一项转成整数，因为parseInt有第二个参数：原数字进制，所以我们需要去掉第二个参数
+  expect(array.map(parseInt)).toEqual([11, NaN, 3, 4])
+  // 只传入函数的第一个参数执行函数
+  expect(array.map(curry1(parseInt))).toEqual([11, 11, 11, 11])
+})
+
+// 柯里化函数双参数: fun => last => first => fun(first, last)
+test('curry2', () => {
+  const array = [10, 20, 30, 40]
+
+  // 把数组的每一项当做16进制转成10进制
+  const parseBinaryString = curry2(parseInt)(16)
+  expect(array.map((parseBinaryString))).toEqual([16, 32, 48, 64])
+
+  // 把数组的每个数除以2
+  const div = (n, d) => n / d
+  const per10 = curry2(div)(10)
+  expect(array.map((per10))).toEqual([1, 2, 3, 4])
+})
+
+// 柯里化函数多参数: fun => ... => d => c => b => a =>...fun(a, b, c, d, ...)
+test('curryless', () => {
+  const sum = (...args) => args.reduce((total, next) => total / next)
+  expect(curryless(sum)(2)(2.5)(4)(10)(100).done()).toEqual(0.5)
 })
 
 // 根据传入函数的返回注入函数参数
@@ -315,4 +393,13 @@ test('partialRight', () => {
 
   // 原来参数的右侧注入：argsrest参数
   expect([1, 2, 3].map(partialRight(fn, 'argsrest'))).toEqual([true, true, true])
+})
+
+// 在原函数参数右侧注入参数
+test('complement', () => {
+  const isOdd = n => n % 2 !== 0
+  const isEven = complement(isOdd)
+
+  expect(isEven(1)).toEqual(false)
+  expect(isEven(2)).toEqual(true)
 })

@@ -29,6 +29,7 @@ const {
   subtract,
 
   cat,
+  connectmap,
   connect,
   unique,
   union,
@@ -231,6 +232,21 @@ test('subtract', () => {
 test('cat', () => {
   // 把[1], [2], [3]连接成[1, 2, 3]
   expect(cat([1], [2], [3])).toEqual([1, 2, 3])
+})
+
+// 通过函数处理数组中改的每一项，相当于map
+test('connectmap', () => {
+  const first = () => 'first'
+  const second = () => 'second'
+  const third = () => 'third'
+
+  const fns = [first, second, third]
+  // 每个函数包一层中间件，打印日志
+  const mapped = connectmap(fns, fn => (...args) => {
+    console.log(`${fn.name}开始执行，参数为：`, ...args)
+    return fn(...args)
+  })
+  expect(mapped.map(item => item('connectmap function initiation args'))).toEqual(['first', 'second', 'third'])
 })
 
 // 把多项值连接成一个数组

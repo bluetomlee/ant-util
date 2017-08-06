@@ -1,5 +1,5 @@
 /* eslint-disable */
-const util = require('../dist/index').default
+const util = require('../lib/index').default
 const { first, some, map, replace } = util
 
 console.log('非插件函数', first, some, map, replace)

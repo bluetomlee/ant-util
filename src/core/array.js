@@ -80,6 +80,8 @@ const cat = (...args) => {
 
 const connect = (head, ...rest) => cat([head], ...rest)
 
+const connectmap = (coll, fun) => connect(...coll.map(fun))
+
 // 去重
 const unique = array => array.reduce((last, arr) => last.includes(arr) ? last : [...last, arr], [])
 
@@ -140,6 +142,7 @@ export {
   subtract,
 
   cat,
+  connectmap,
   connect,
   unique,
   union,
