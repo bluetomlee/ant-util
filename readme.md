@@ -1,6 +1,6 @@
 ## Ant Util
 
-a javascript function expressions util and includes some practical function used in dom.
+a javascript function expressions util and includes practical function used in dom.
 
 ### document
 
