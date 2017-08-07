@@ -68,7 +68,7 @@ const iterate = (valueCreator, checker, init) => {
 const toObject = (datas, pluck = value => value) => datas.reduce((last, next) => ({ ...last, [pluck(next)]: next }), {})
 
 // 对比
-const diff = (arr1, arr2) => arr1.length === arr2.length && arr1.every(value => arr2.includes(value))
+const diff = (arr1, arr2) => arr1.length === arr2.length && arr1.every(value => arr2.includes(value)) && arr2.every(value => arr1.includes(value))
 
 const subtract = (all, some) => all.reduce((output, name) => (!some.includes(name) ? output.concat(name) : output), [])
 
