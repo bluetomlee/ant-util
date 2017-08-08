@@ -4,15 +4,17 @@
   "description": "ant工具组件",
   "main": "dist/index.js",
   "scripts": {
+    "prepublish": "npm run lint && npm run test",
     "build": "webpack",
     "babel": "babel src -d lib",
     "deploy": "npm version patch && git add . && git commit -m 'patch devtool auto commit' && git push && npm publish",
     "start": "npm run dev",
-    "test": "jest",
+    "test": "jest __test__ --coverage",
     "lint": "eslint src",
     "testfunc": "npm run test __test__/functions.test.js",
     "testarray": "npm run test __test__/array.test.js",
-    "testif": "npm run test __test__/if.test.js"
+    "testif": "npm run test __test__/if.test.js",
+    "codecov": "./node_modules/.bin/codecov"
   },
   "pre-commit": [
     "lint"
@@ -36,6 +38,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.7.2",
     "babel-runtime": "^6.11.6",
+    "codecov": "^2.3.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-babel": "^3.0.0",

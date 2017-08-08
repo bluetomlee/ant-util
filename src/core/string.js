@@ -1,7 +1,10 @@
 const capitalize = str => str === undefined || str.length === 0 ? str : `${str[0].toUpperCase()}${str.slice(1)}`
 
+/* istanbul ignore next */
 const uniqueString = len => Math.random().toString(36).substr(2, len)
 // console.log(uniqueString(10))
+
+/* istanbul ignore next */
 const uniquePrefix = prefix => [prefix, new Date().getTime()].join('')
 // console.log(uniquePrefix('ghosts'))
 // console.log(uniquePrefix('turkey'))
