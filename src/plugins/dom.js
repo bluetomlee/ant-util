@@ -1,3 +1,7 @@
+function $(selector) {
+  return document.querySelector(selector)
+}
+
 function offsetTop(el) {
   let top = el.offsetTop
   let parent = el.offsetParent
@@ -52,7 +56,6 @@ function getBrowserPrefix() {
   return pre.slice(0, 1).toUpperCase() + pre.slice(1)
 }
 
-
 /**
  * 获取url问号后边的变量相对应的值
  * @param {String} key
@@ -63,7 +66,6 @@ function getQuery(key) {
   const r = window.location.search.substr(1).match(reg)
   return r ? decodeURI(r[2]) : ''
 }
-
 
 function debounce(fn, wait = 200) {
   let timeout
@@ -122,6 +124,7 @@ const getCookie = (key) => {
 const nextTick = (callback, delay = 0) => window.setTimeout(callback, delay)
 
 export {
+  $,
   offsetTop,
   offsetLeft,
   addEvent,
