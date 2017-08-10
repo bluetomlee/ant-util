@@ -117,7 +117,7 @@ const skipWindow = (url) => {
 const go = path => history.go(path)
 
 const getCookie = (key) => {
-  const m = new RegExp(`\\b${key}\\=([^]+)`).exec(document.cookie)
+  const m = new RegExp(`\\b${key}\\=([^;]+)`).exec(document.cookie)
   return m ? m[1] : ''
 }
 
