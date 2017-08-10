@@ -85,6 +85,9 @@ const connectmap = (coll, fun) => connect(...coll.map(fun))
 // 去重
 const unique = array => array.reduce((last, arr) => last.includes(arr) ? last : [...last, arr], [])
 
+// const unique = array => [...new Set(array)]
+// const unique = array => array.filter((item, i) => i === array.indexOf(item))
+
 // 合并去重
 const union = (a, b) => unique(cat(a, b))
 
