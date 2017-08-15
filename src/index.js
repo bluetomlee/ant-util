@@ -7,6 +7,8 @@ import * as async from './plugins/async'
 import * as history from './plugins/history'
 import * as middleware from './plugins/middleware'
 import * as dom from './plugins/dom'
+import * as url from './plugins/url'
+
 
 export default {
   ...array,
@@ -18,5 +20,6 @@ export default {
     history,
     middleware,
     dom,
+    url,
   },
 }

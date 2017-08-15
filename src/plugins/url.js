@@ -1,13 +1,14 @@
 import { map2Array } from '../core/object'
 
-// const  = util
+const parseQuery = (search = '') =>
+  search.replace(/\?/, '').split('&').reduce((query, expression) => {
+    const [key = '', value = ''] = expression.split('=')
+    return { ...query, [key]: decodeURIComponent(value) }
+  }, {})
 
-export default {
-  parseQuery: (search = '') =>
-    search.replace(/\?/, '').split('&').reduce((query, expression) => {
-      const [key = '', value = ''] = expression.split('=')
-      return { ...query, [key]: decodeURIComponent(value) }
-    }, {}),
+const stringifyQuery = (query = {}) => map2Array(query, (value, key) => `${key}=${encodeURIComponent(value)}`).join('&')
 
-  stringifyQuery: (query = {}) => map2Array(query, (value, key) => `${key}=${encodeURIComponent(value)}`).join('&'),
+export {
+  parseQuery,
+  stringifyQuery,
 }
