@@ -31,6 +31,8 @@ const remove = (obj, item) => Object.keys(obj).forEach(k => obj[k] === item && d
 
 const each = (obj, fn) => keys(obj).forEach(k => (fn && fn(obj[k], k)))
 
+const against = obj => !obj
+
 const exist = obj => !!obj
 
 const truthy = obj => exist(obj) && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
@@ -99,6 +101,7 @@ export {
   mergeDefault,
   different,
   shallowEqual,
+  against,
   exist,
   truthy,
   zip,

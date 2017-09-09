@@ -30,6 +30,8 @@ const {
 const {
   chain,
   repeatness,
+  finder,
+  exist,
 } = util
 
 const returnCreator = (handle, args) => `${handle} function ${args} return value`
@@ -156,7 +158,7 @@ test('exec', () => {
   }
 
   // 数组为空，不会执行回调函数
-  expect(exec(conditionCreate(array), callback)(...array)).toEqual(undefined)
+  expect(exec(conditionCreate(array), callback, [])(...array)).toEqual([])
 
   // 数组不为空，执行回调函数
   array.push('exec function initiation args')
@@ -202,6 +204,16 @@ test('match', () => {
   // 执行条件 code === 2 与 code > 1的函数second， third
   const code = 2
   expect(match(mapCreator(code))('match function initiation args')).toEqual([undefined, returns.second, returns.third])
+
+
+  const cond = 3
+  const map = [
+    { condition: cond === 1, action: fns.first },
+    { condition: cond === 2, action: fns.second },
+    { condition: cond === 3, action: fns.third },
+  ]
+
+  expect(finder(match(map)('match function initiation args'), current => exist(current))).toEqual(returns.third)
 })
 
 // 组合函数

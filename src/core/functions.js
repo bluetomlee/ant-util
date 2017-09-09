@@ -21,10 +21,10 @@ const any = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (tr
 const binds = (origin, methods, target) => methods.forEach(methodName => origin[methodName] = origin[methodName].bind(target || origin))
 
 /* 执行 */
-const exec = (condition, handle) => (...args) => exist(condition) ? handle(...args) : undefined
+const exec = (condition, handle, defaultValue) => (...args) => exist(condition) ? handle(...args) : defaultValue
 
-const exer = (origin, name) => (...args) => {
-  const action = origin[name]
+const exer = (target, name) => (...args) => {
+  const action = target[name] || target
   return exec(action, () => typeof action === 'function' ? action(...args) : action)()
 }
 
@@ -63,7 +63,7 @@ const inject = (fun, createArgsToInject, spread = false) => (...args) => {
   return spread ? fun(...injectArgs, ...args) : fun(injectArgs, ...args)
 }
 
-const grund = (checker, handle, errorHandle) => (...args) => checker(...args) ? handle(...args) : errorHandle(...args)
+const grund = (checker, handle, errorHandle) => (...args) => exer(checker)(...args) ? handle(...args) : errorHandle(...args)
 
 const partial = (fun, ...argv) => (...rest) => fun.call(this, ...argv, ...rest)
 

@@ -94,7 +94,7 @@ test('find', () => {
 test('finder', () => {
   const arrayObject = [{ name: 'A', age: 64 }, { name: 'B', age: 32 }, { name: 'C', age: 50 }]
 
-  // 求数组中以B开头的人名
+  // 求数组年龄最大值
   expect(finder(arrayObject, (x, y) => x.age > y.age)).toEqual({ name: 'A', age: 64 })
 })
 
