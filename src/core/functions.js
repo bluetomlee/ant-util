@@ -9,14 +9,6 @@ const translate = (fun, ...args) => new Function(...args, `return ${fun}`)()
 /* 生成器 */
 const always = value => () => value
 
-/* 反射 */
-const invoke = (obj, fun, ...args) => obj[fun] !== undefined ? obj[fun](...args) : undefined
-
-/* 判断 */
-const all = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (truth && fun(...args) === condition), true)
-
-const any = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (truth || fun(...args) === condition), false)
-
 /* 绑定 */
 const binds = (origin, methods, target) => methods.forEach(methodName => origin[methodName] = origin[methodName].bind(target || origin))
 
@@ -24,11 +16,25 @@ const binds = (origin, methods, target) => methods.forEach(methodName => origin[
 const exec = (condition, handle, defaultValue) => (...args) => exist(condition) ? handle(...args) : defaultValue
 
 const exer = (target, name) => (...args) => {
-  const action = target[name] || target
-  return exec(action, () => typeof action === 'function' ? action(...args) : action)()
+  const cleat = target[name] || target
+  return typeof cleat === 'function' ? exec(cleat, cleat)(...args) : cleat
+}
+
+const run = (hundle, ...args) => hundle(...args)
+
+const invoke = (obj, fun, ...args) => obj[fun] !== undefined ? obj[fun](...args) : undefined
+
+const invoker = name => (target, ...args) => {
+  const targetMethod = target[name]
+  return exec(targetMethod, targetMethod.bind(target))(...args)
 }
 
 const match = actions => (...args) => actions.map(({ condition, action }) => (exec(condition, action)(...args)))
+
+/* 判断 */
+const all = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (truth && exer(fun)(...args) === condition), true)
+
+const any = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (truth || exer(fun)(...args) === condition), false)
 
 /* 柯里化 */
 const compose = (first, ...last) => (...initArgs) => last.reduce((composed, func) => func(composed), first(...initArgs))
@@ -36,11 +42,6 @@ const compose = (first, ...last) => (...initArgs) => last.reduce((composed, func
 const concat = (...funs) => (...args) => funs.reduce((returns, fun) => [...returns, fun(...args)], [])
 
 const some = (...funs) => (...args) => funs.reduce((last, fun) => last === undefined ? fun(...args) : last, undefined)
-
-const invoker = name => (target, ...args) => {
-  const targetMethod = target[name]
-  return exec(targetMethod, targetMethod.bind(target))(...args)
-}
 
 const curry = fun => (...args) => fun.call(this, ...args)
 
@@ -58,40 +59,41 @@ const curryless = (fun) => {
   return handle
 }
 
+const grund = (checker, handle, errorHandle) => (...args) => exer(checker)(...args) ? handle(...args) : errorHandle(...args)
+
+const partial = (fun, ...argv) => (...rest) => fun.call(this, ...rest, ...argv)
+
+const partialLeft = (fun, ...argv) => (...rest) => fun.call(this, ...argv, ...rest)
+
 const inject = (fun, createArgsToInject, spread = false) => (...args) => {
   const injectArgs = createArgsToInject(...args)
   return spread ? fun(...injectArgs, ...args) : fun(injectArgs, ...args)
 }
-
-const grund = (checker, handle, errorHandle) => (...args) => exer(checker)(...args) ? handle(...args) : errorHandle(...args)
-
-const partial = (fun, ...argv) => (...rest) => fun.call(this, ...argv, ...rest)
-
-const partialRight = (fun, ...argv) => (...rest) => fun.call(this, ...rest, ...argv)
 
 const complement = fun => (...args) => !fun(...args)
 
 export {
   translate,
   always,
-  invoke,
-  all,
-  any,
   binds,
   exec,
   exer,
+  run,
+  invoke,
+  invoker,
   match,
+  all,
+  any,
   compose,
   concat,
   some,
-  invoker,
   curry,
   curry1,
   curry2,
   curryless,
-  inject,
   grund,
   partial,
-  partialRight,
+  partialLeft,
+  inject,
   complement,
 }

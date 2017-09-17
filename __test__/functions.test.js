@@ -4,17 +4,18 @@ import util from '../src/index'
 const {
   translate,
   always,
-  invoke,
-  all,
-  any,
   binds,
   exec,
   exer,
+  run,
+  invoke,
+  invoker,
   match,
+  all,
+  any,
   compose,
   concat,
   some,
-  invoker,
   curry,
   curry1,
   curry2,
@@ -22,12 +23,13 @@ const {
   inject,
   grund,
   partial,
-  partialRight,
+  partialLeft,
   complement,
 } = util
 
 // 其他函数
 const {
+  identity,
   chain,
   repeatness,
   finder,
@@ -63,70 +65,6 @@ test('translate', () => {
 // 用来创建指定返回值的函数
 test('always', () => {
   expect(repeatness(always('Odelay'), 3)).toEqual(['Odelay', 'Odelay', 'Odelay'])
-})
-
-// 反射执行
-test('invoke', () => {
-  const returns = returnAPICreator('invoke', ['first', 'second', 'third'])
-
-  const first = (...args) => {
-    console.log(...args)
-    return returns.first
-  }
-  const second = (...args) => {
-    console.log(...args)
-    return returns.second
-  }
-  const third = (...args) => {
-    console.log(...args)
-    return returns.third
-  }
-
-  const fns = { first, second, third }
-  // 执行second函数
-  expect(invoke(fns, 'second', 'invoke function initiation args')).toEqual(returns.second)
-})
-
-// 所有函数都返回某个条件，会返回true，否则返回false
-test('all', () => {
-  const first = (...args) => {
-    console.log(...args)
-    return true
-  }
-  const second = (...args) => {
-    console.log(...args)
-    return true
-  }
-  const third = (...args) => {
-    console.log(...args)
-    return true
-  }
-
-  // 所有函数都返回true，最终返回true, 示例函数全部执行
-  expect(all(first, second, third)(true, 'all function initiation args')).toEqual(true)
-  // 所有条件都不会返回false, 最终返回false, 示例函数只会执行一个
-  expect(all(first, second, third)(false, 'all function initiation args')).toEqual(false)
-})
-
-// 任意函数返回某个条件，会返回true，否则返回false
-test('any', () => {
-  const first = (...args) => {
-    console.log(...args)
-    return false
-  }
-  const second = (...args) => {
-    console.log(...args)
-    return false
-  }
-  const third = (...args) => {
-    console.log(...args)
-    return true
-  }
-
-  // 任意函数返回true，最终返回true, 示例函数全部执行
-  expect(any(first, second, third)(true, 'any function initiation args')).toEqual(true)
-  // 任意函数返回false，最终返回true, 示例函数只会执行一个
-  expect(any(first, second, third)(false, 'any function initiation args')).toEqual(true)
 })
 
 // 绑定对象的指定函数
@@ -177,6 +115,46 @@ test('exer', () => {
   expect(exer(fns, 'second')('exer function initiation args')).toEqual('second')
 })
 
+// 执行
+test('run', () => {
+  const fn = (...args) => {
+    console.log(args)
+    return 'run function return value'
+  }
+  expect(run(fn, 'test run')).toEqual('run function return value')
+})
+
+// 反射执行
+test('invoke', () => {
+  const returns = returnAPICreator('invoke', ['first', 'second', 'third'])
+
+  const first = (...args) => {
+    console.log(...args)
+    return returns.first
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return returns.second
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return returns.third
+  }
+
+  const fns = { first, second, third }
+  // 执行second函数
+  expect(invoke(fns, 'second', 'invoke function initiation args')).toEqual(returns.second)
+})
+
+// 柯里化反射
+test('invoker', () => {
+  // 柯里化拆分函数与参数
+  expect(invoker('reverse')([1, 2, 3])).toEqual([3, 2, 1])
+
+  // 柯里化拆分函数与参数
+  expect(invoker('map')([1, 2, 3], item => item * 2)).toEqual([2, 4, 6])
+})
+
 // 根据传入的条件集判断是否执行函数，可以完全代替if
 test('match', () => {
   const returns = returnAPICreator('match', ['first', 'second', 'third'])
@@ -205,7 +183,7 @@ test('match', () => {
   const code = 2
   expect(match(mapCreator(code))('match function initiation args')).toEqual([undefined, returns.second, returns.third])
 
-
+  // 单条件
   const cond = 3
   const map = [
     { condition: cond === 1, action: fns.first },
@@ -213,7 +191,62 @@ test('match', () => {
     { condition: cond === 3, action: fns.third },
   ]
 
-  expect(finder(match(map)('match function initiation args'), current => exist(current))).toEqual(returns.third)
+  expect(finder(match(map)('match function initiation args'), exist)).toEqual(returns.third)
+
+  // 最简易：根据条件获取返回值
+  const mapEasy = [
+    { condition: cond === 1, action: always(1) },
+    { condition: cond === 2, action: always(2) },
+    { condition: cond === 3, action: always(3) },
+  ]
+
+  expect(finder(match(mapEasy)(), exist)).toEqual(cond)
+})
+
+// 所有值或函数都返回某个条件，会返回true，否则返回false
+test('all', () => {
+  const first = (...args) => {
+    console.log(...args)
+    return true
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return true
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return true
+  }
+
+  // 所有函数都返回true，最终返回true, 示例函数全部执行
+  expect(all(first, second, third)(true, 'all function initiation args')).toEqual(true)
+  // 所有条件都不会返回false, 最终返回false, 示例函数只会执行一个
+  expect(all(first, second, third)(false, 'all function initiation args')).toEqual(false)
+  // 所有条件都返回false, 返回true
+  expect(all(5 < 3, 1 === 2, false)(false)).toEqual(true)
+})
+
+// 任意值或函数返回某个条件，会返回true，否则返回false
+test('any', () => {
+  const first = (...args) => {
+    console.log(...args)
+    return false
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return false
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return true
+  }
+
+  // 任意函数返回true，最终返回true, 示例函数全部执行
+  expect(any(first, second, third)(true, 'any function initiation args')).toEqual(true)
+  // 任意函数返回false，最终返回true, 示例函数只会执行一个
+  expect(any(first, second, third)(false, 'any function initiation args')).toEqual(true)
+  // 任意条件都返回false, 返回true
+  expect(any(5 > 3, 1 === 2, true)(false)).toEqual(true)
 })
 
 // 组合函数
@@ -308,15 +341,6 @@ test('some', () => {
   expect(some(first, second, third)('some function initiation args')).toEqual(returns.second)
 })
 
-// 柯里化反射
-test('invoker', () => {
-  // 柯里化拆分函数与参数
-  expect(invoker('reverse')([1, 2, 3])).toEqual([3, 2, 1])
-
-  // 柯里化拆分函数与参数
-  expect(invoker('map')([1, 2, 3], item => item * 2)).toEqual([2, 4, 6])
-})
-
 // 柯里化函数
 test('curry', () => {
   const fn = (...args) => {
@@ -357,6 +381,44 @@ test('curryless', () => {
   expect(curryless(sum)(2)(2.5)(4)(10)(100).done()).toEqual(0.5)
 })
 
+// 检测函数参数与根据条件渲染
+test('grund', () => {
+  function setValue(object, path, value) {
+    object[path] = value
+    return 'setValue success'
+  }
+
+  const finalSet = grund((object, path) => !!object && !!path, setValue, () => console.log('grund function args error'))
+
+  const obj = {}
+  expect(finalSet(obj, 'name', 'ant')).toEqual('setValue success')
+
+  const render = grund(true, args => `${args} right`, args => `${args} error`)
+  expect(render('render')).toEqual('render right')
+})
+
+// 在原函数参数右侧注入参数
+test('partial', () => {
+  const fn = (...args) => {
+    console.log('partial function args is:', ...args)
+    return true
+  }
+
+  // 原来参数的左侧注入：argsrest参数
+  expect([1, 2, 3].map(partial(fn, 'argsrest'))).toEqual([true, true, true])
+})
+
+// 在原函数参数左侧注入参数
+test('partialLeft', () => {
+  const fn = (...args) => {
+    console.log('partialLeft function args is:', ...args)
+    return true
+  }
+
+  // 原来参数的右侧注入：argsrest参数
+  expect([1, 2, 3].map(partialLeft(fn, 'argsrest'))).toEqual([true, true, true])
+})
+
 // 根据传入函数的返回注入函数参数
 test('inject', () => {
   const fn = (...args) => {
@@ -370,41 +432,21 @@ test('inject', () => {
   }
 
   expect(inject(fn, resolve)('origin args')).toEqual('inject function return value')
-})
 
-// 检测函数参数
-test('grund', () => {
-  function setValue(object, path, value) {
-    object[path] = value
-    return 'setValue success'
+  // 后端返回数据格式
+  const data = {
+    user: {
+      id: 12345,
+      loginDate: '2000-01-01',
+    },
+    modal: {
+      id: 'a1',
+      name: 'lucy',
+    },
   }
 
-  const finalSet = grund((object, path) => !!object && !!path, setValue, () => console.log('grund function args error'))
-
-  const obj = {}
-  expect(finalSet(obj, 'name', 'ant')).toEqual('setValue success')
-})
-
-// 在原函数参数左侧注入参数
-test('partial', () => {
-  const fn = (...args) => {
-    console.log('partial function args is:', ...args)
-    return true
-  }
-
-  // 原来参数的左侧注入：argsrest参数
-  expect([1, 2, 3].map(partial(fn, 'argsrest'))).toEqual([true, true, true])
-})
-
-// 在原函数参数右侧注入参数
-test('partialRight', () => {
-  const fn = (...args) => {
-    console.log('partialRight function args is:', ...args)
-    return true
-  }
-
-  // 原来参数的右侧注入：argsrest参数
-  expect([1, 2, 3].map(partialRight(fn, 'argsrest'))).toEqual([true, true, true])
+  const compute = data => ({ id: data.user.id, loginDate: data.user.loginDate, modalId: data.modal.id, name: data.modal.name })
+  expect(inject(identity, compute)(data)).toEqual({ id: 12345, loginDate: '2000-01-01', modalId: 'a1', name: 'lucy' })
 })
 
 // 在原函数参数右侧注入参数

@@ -13,6 +13,9 @@ const reduce = (obj, handler, initial = {}) => keys(obj).reduce((last, key) => h
 
 const filter = (obj, handler) => reduce(obj, (last, value, key) => (handler(value, key) ? { ...last, [key]: value } : last))
 
+const mapKey = (obj, keymap) => reduce(obj, (last, value, key) => ({ ...last, [keymap[key]]: value }))
+// mapKey({a:1,b:2}, {a: 'x', b: 'y'})
+
 const map = (obj, handler) => reduce(obj, (last, value, key) => ({ ...last, [key]: handler(value, key) }))
 
 const map2Array = (obj, handler) => keys(obj).map((key, index) => handler(obj[key], key, index))
@@ -38,6 +41,8 @@ const exist = obj => !!obj
 const truthy = obj => exist(obj) && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
 
 const zip = (zipKeys, zipValues) => zipKeys.reduce((last, key, index) => ({ ...last, [key]: zipValues[index] }), {})
+
+const setDefault = (current, defaultValue) => current || defaultValue
 
 const mergeDefault = (object, defaultValue) => ({ ...defaultValue, ...object })
 
@@ -90,6 +95,7 @@ export {
   each,
   reduce,
   filter,
+  mapKey,
   map,
   map2Array,
   values,
@@ -98,6 +104,7 @@ export {
   omit,
   pick,
   walk,
+  setDefault,
   mergeDefault,
   different,
   shallowEqual,
