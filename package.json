@@ -1,19 +1,21 @@
 {
   "name": "ant-util",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "ant工具组件",
   "main": "dist/index.js",
   "scripts": {
-    "prepublish": "npm run lint && npm run test",
+    "prepublish": "npm run lint && jest",
     "build": "webpack",
     "babel": "babel src -d lib",
     "deploy": "npm version patch && git add . && git commit -m 'patch devtool auto commit' && git push && npm publish",
     "start": "npm run dev",
     "test": "jest __test__ --coverage",
     "lint": "eslint src",
-    "testfunc": "npm run test __test__/functions.test.js",
-    "testarray": "npm run test __test__/array.test.js",
-    "testif": "npm run test __test__/if.test.js",
+    "testfunc": "jest __test__/functions.test.js",
+    "testarray": "jest __test__/array.test.js",
+    "testif": "jest __test__/if.test.js",
+    "testexist": "jest __test__/exist.test.js",
+    "testassert": "jest __test__/assert.test.js",
     "codecov": "./node_modules/.bin/codecov"
   },
   "pre-commit": [

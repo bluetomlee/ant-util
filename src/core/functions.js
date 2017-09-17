@@ -59,6 +59,8 @@ const curryless = (fun) => {
   return handle
 }
 
+const choose = (...conditions) => (...values) => values.find((val, index) => exist(conditions[index]))
+
 const grund = (checker, handle, errorHandle) => (...args) => exer(checker)(...args) ? handle(...args) : errorHandle(...args)
 
 const partial = (fun, ...argv) => (...rest) => fun.call(this, ...rest, ...argv)
@@ -91,6 +93,7 @@ export {
   curry1,
   curry2,
   curryless,
+  choose,
   grund,
   partial,
   partialLeft,

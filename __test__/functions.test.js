@@ -21,6 +21,7 @@ const {
   curry2,
   curryless,
   inject,
+  choose,
   grund,
   partial,
   partialLeft,
@@ -382,6 +383,13 @@ test('curryless', () => {
 })
 
 // 检测函数参数与根据条件渲染
+test('choose', () => {
+  const conditions = [false, false, false, true, false, true]
+  const values = [1, 2, 3, 4, 5]
+  expect(choose(...conditions)(...values)).toEqual(4)
+})
+
+// 检测函数参数与根据条件渲染
 test('grund', () => {
   function setValue(object, path, value) {
     object[path] = value
@@ -445,7 +453,12 @@ test('inject', () => {
     },
   }
 
-  const compute = data => ({ id: data.user.id, loginDate: data.user.loginDate, modalId: data.modal.id, name: data.modal.name })
+  const compute = data => ({
+    id: data.user.id,
+    loginDate: data.user.loginDate,
+    modalId: data.modal.id,
+    name: data.modal.name
+  })
   expect(inject(identity, compute)(data)).toEqual({ id: 12345, loginDate: '2000-01-01', modalId: 'a1', name: 'lucy' })
 })
 

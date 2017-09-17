@@ -4,11 +4,10 @@ import * as object from './core/object'
 import * as string from './core/string'
 
 import * as async from './plugins/async'
-import * as history from './plugins/history'
-import * as middleware from './plugins/middleware'
 import * as dom from './plugins/dom'
 import * as url from './plugins/url'
-
+import * as exist from './plugins/exist'
+import * as assert from './plugins/assert'
 
 export default {
   ...array,
@@ -17,9 +16,9 @@ export default {
   ...string,
   plugins: {
     async,
-    history,
-    middleware,
     dom,
     url,
+    exist,
+    assert,
   },
 }

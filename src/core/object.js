@@ -36,7 +36,11 @@ const each = (obj, fn) => keys(obj).forEach(k => (fn && fn(obj[k], k)))
 
 const against = obj => !obj
 
-const exist = obj => !!obj
+const exist = (obj, type = 0) => {
+  if (type === 0) return !!obj
+  if (type === null) return obj !== undefined && obj !== null
+  if (type) return !!obj && typeof obj === 'object' ? !!keys(obj).length : true
+}
 
 const truthy = obj => exist(obj) && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
 
