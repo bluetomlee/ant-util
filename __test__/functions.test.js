@@ -192,7 +192,7 @@ test('match', () => {
     { condition: cond === 3, action: fns.third },
   ]
 
-  expect(finder(match(map)('match function initiation args'), exist)).toEqual(returns.third)
+  expect(finder(match(map)('match function initiation args'), curry1(exist))).toEqual(returns.third)
 
   // 最简易：根据条件获取返回值
   const mapEasy = [
@@ -201,7 +201,7 @@ test('match', () => {
     { condition: cond === 3, action: always(3) },
   ]
 
-  expect(finder(match(mapEasy)(), exist)).toEqual(cond)
+  expect(finder(match(mapEasy)(), curry1(exist))).toEqual(cond)
 })
 
 // 所有值或函数都返回某个条件，会返回true，否则返回false
