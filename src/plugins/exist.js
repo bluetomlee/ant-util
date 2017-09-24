@@ -1,10 +1,10 @@
-import { map, exist } from '../core/object'
+import { map, exist, setDefault } from '../core/object'
 
 const get = (obj, path, defaultValue, sep = '.') => {
   const paths = Array.isArray(path) ? path : path.split(sep)
   const result = paths.reduce((last, path) => {
-    return last !== undefined && path ? last[path] : last
-  }, obj)
+    return last && path ? last[path] : last
+  }, setDefault(obj, {}))
   return exist(result, null) ? result : defaultValue || result
 }
 
@@ -20,7 +20,7 @@ const set = (obj, path, value, sep = '.') => {
       last[path] = {}
     }
     return current
-  }, obj)
+  }, setDefault(obj, {}))
   return obj
 }
 
