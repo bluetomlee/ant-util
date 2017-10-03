@@ -53,7 +53,7 @@ $ cd ant-util && npm install
 * [string][9]
 
 
-  [1]: https://antgod.gitbooks.io/ant-util/
+  [1]: https://github.com/antgod/ant-util/
   [2]: https://antgod.gitbooks.io/ant-util/array.html
   [3]: https://antgod.gitbooks.io/ant-util/async.html
   [4]: https://antgod.gitbooks.io/ant-util/dom.html

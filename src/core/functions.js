@@ -36,6 +36,10 @@ const all = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (tr
 
 const any = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (truth || exer(fun)(...args) === condition), false)
 
+const allness = (...conditions) => conditions.reduce((truth, condition) => (truth && condition), true)
+
+const anyness = (...conditions) => conditions.reduce((truth, condition) => (truth || condition), false)
+
 /* 柯里化 */
 const compose = (first, ...last) => (...initArgs) => last.reduce((composed, func) => func(composed), first(...initArgs))
 
@@ -86,6 +90,8 @@ export {
   match,
   all,
   any,
+  allness,
+  anyness,
   compose,
   concat,
   some,

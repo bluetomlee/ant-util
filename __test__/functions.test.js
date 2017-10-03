@@ -13,6 +13,8 @@ const {
   match,
   all,
   any,
+  allness,
+  anyness,
   compose,
   concat,
   some,
@@ -61,6 +63,11 @@ test('translate', () => {
   const handleDynmicArgs = prop => `function handle(value) { return 'my ' + '${prop}' + ' is ' + value}`
   result = translate(handleDynmicArgs('name'))('ant')
   expect(result).toEqual('my name is ant')
+
+  // 声明式参数
+  const statementParameters = new Function('users', 'salary', 'return users * salary')
+  result = translate(statementParameters)(10, 50)
+  expect(result).toEqual(500)
 })
 
 // 用来创建指定返回值的函数
@@ -250,6 +257,20 @@ test('any', () => {
   expect(any(5 > 3, 1 === 2, true)(false)).toEqual(true)
 })
 
+// 全部或函数返回某个条件，会返回true，否则返回false
+test('allness', () => {
+  // 全部条件都返回false, 返回true
+  expect(allness(true, true, true)).toEqual(true)
+  expect(allness(5 > 3, 1 === 2, true)).toEqual(false)
+})
+
+// 全部或函数返回某个条件，会返回true，否则返回false
+test('anyness', () => {
+  // 全部条件都返回false, 返回true
+  expect(anyness(false, false, false)).toEqual(false)
+  expect(anyness(5 > 3, 1 === 2, true)).toEqual(true)
+})
+
 // 组合函数
 test('compose', () => {
   const returns = returnAPICreator('compose', ['first', 'second', 'third'])
@@ -387,6 +408,11 @@ test('choose', () => {
   const conditions = [false, false, false, true, false, true]
   const values = [1, 2, 3, 4, 5]
   expect(choose(...conditions)(...values)).toEqual(4)
+
+  const flag = 2
+  const conditions2 = [allness(flag === 1), allness(flag === 2), allness(flag === 3)]
+
+  expect(choose(...conditions2)(...['x', 'y', 'z'])).toEqual('y')
 })
 
 // 检测函数参数与根据条件渲染
@@ -457,7 +483,7 @@ test('inject', () => {
     id: data.user.id,
     loginDate: data.user.loginDate,
     modalId: data.modal.id,
-    name: data.modal.name
+    name: data.modal.name,
   })
   expect(inject(identity, compute)(data)).toEqual({ id: 12345, loginDate: '2000-01-01', modalId: 'a1', name: 'lucy' })
 })
