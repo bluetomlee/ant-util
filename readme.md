@@ -43,22 +43,21 @@ $ cd ant-util && npm install
 ```
 ### Catalog
 
-* [array][2]
-* [async][3]
-* [dom][4]
-* [functions][5]
-* [histroy][6]
-* [middleware][7]
-* [object][8]
-* [string][9]
-
+* [functions][2]
+* [array][3]
+* [object][4]
+* [string][5]
+* [exist][6]
+* [dom][7]
+* [url][8]
+* [assert][9]
 
   [1]: https://github.com/antgod/ant-util/
-  [2]: https://antgod.gitbooks.io/ant-util/array.html
-  [3]: https://antgod.gitbooks.io/ant-util/async.html
-  [4]: https://antgod.gitbooks.io/ant-util/dom.html
-  [5]: https://antgod.gitbooks.io/ant-util/functions.html
-  [6]: https://antgod.gitbooks.io/ant-util/history.html
-  [7]: https://antgod.gitbooks.io/ant-util/middleware
-  [8]: https://antgod.gitbooks.io/ant-util/object.html
-  [9]: https://antgod.gitbooks.io/ant-util/string.html
+  [2]: https://github.com/antgod/ant-util/blob/master/__test__/functions.test.js
+  [3]: https://github.com/antgod/ant-util/blob/master/__test__/array.test.js
+  [4]: https://github.com/antgod/ant-util/blob/master/__test__/object.test.js
+  [5]: https://github.com/antgod/ant-util/blob/master/__test__/string.test.js
+  [6]: https://github.com/antgod/ant-util/blob/master/__test__/exist.test.js
+  [7]: https://github.com/antgod/ant-util/blob/master/__test__/dom.test.js
+  [8]: https://github.com/antgod/ant-util/blob/master/__test__/url.test.js
+  [9]: https://github.com/antgod/ant-util/blob/master/__test__/assert.test.js
