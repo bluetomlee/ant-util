@@ -1,4 +1,10 @@
-import { parseQuery, stringifyQuery }  from '../src/plugins/url'
+import util from '../src/index'
+
+const {
+  parseQuery,
+  stringifyQuery,
+} = util.plugins.url
+
 
 test('parseQuery', () => {
   expect(parseQuery('?a=%E4%BD%A0%E5%A5%BD&b=true&c=abc')).toEqual({
@@ -6,6 +12,14 @@ test('parseQuery', () => {
     b: 'true',
     c: 'abc',
   })
+
+  expect(parseQuery('?=%E4%BD%A0%E5%A5%BD&b=&c=abc')).toEqual({
+    b: '',
+    c: 'abc',
+  })
+
+  expect(parseQuery('')).toEqual({})
+  expect(parseQuery(undefined)).toEqual({})
 })
 
 test('stringifyQuery', () => {
@@ -14,4 +28,7 @@ test('stringifyQuery', () => {
     b: true,
     c: 'abc',
   })).toEqual('a=%E4%BD%A0%E5%A5%BD&b=true&c=abc')
+
+  expect(stringifyQuery({})).toEqual('')
+  expect(stringifyQuery(undefined)).toEqual('')
 })

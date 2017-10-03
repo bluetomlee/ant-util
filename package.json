@@ -16,7 +16,6 @@
     "testif": "jest __test__/if.test.js",
     "testexist": "jest __test__/exist.test.js",
     "testassert": "jest __test__/assert.test.js",
-    "codecov": "./node_modules/.bin/codecov",
     "jsdoc": "jsdoc src -r -c ./conf.json -d docs"
   },
   "pre-commit": [
@@ -58,5 +57,19 @@
     "lodash": "^3.10.1",
     "react-kendo": "~0.13.11",
     "underscore": "^1.8.3"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/plugins/dom.js",
+      "<rootDir>/src/core/object.js"
+    ]
   }
 }

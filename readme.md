@@ -51,6 +51,7 @@ $ cd ant-util && npm install
 * [dom][7]
 * [url][8]
 * [assert][9]
+* [if][10]
 
   [1]: https://github.com/antgod/ant-util/
   [2]: https://github.com/antgod/ant-util/blob/master/__test__/functions.test.js
@@ -61,3 +62,4 @@ $ cd ant-util && npm install
   [7]: https://github.com/antgod/ant-util/blob/master/__test__/dom.test.js
   [8]: https://github.com/antgod/ant-util/blob/master/__test__/url.test.js
   [9]: https://github.com/antgod/ant-util/blob/master/__test__/assert.test.js
+  [10]: https://github.com/antgod/ant-util/blob/master/__test__/if.test.js

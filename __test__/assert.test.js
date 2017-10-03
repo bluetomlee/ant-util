@@ -1,6 +1,5 @@
 import util from '../src/index'
 
-// 数组API
 const {
   assert,
 } = util.plugins.assert

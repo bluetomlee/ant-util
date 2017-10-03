@@ -2,12 +2,23 @@ import util from '../src/index'
 
 const {
   capitalize,
+  uniqueString,
+  uniquePrefix,
   indexGenerator,
-  replace
+  replace,
 } = util
 
 test('capitalize', () => {
   expect(capitalize('hello')).toEqual('Hello')
+})
+
+test('uniqueString', () => {
+  console.log(uniqueString(10))
+})
+
+test('uniquePrefix', () => {
+  console.log(uniquePrefix('ghosts'))
+  console.log(uniquePrefix('turkey'))
 })
 
 test('indexGenerator', () => {

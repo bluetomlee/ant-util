@@ -4,7 +4,6 @@ import util from '../src/index'
 const {
   get,
   gets,
-  set,
 } = util.plugins.exist
 
 const obj = {
@@ -18,7 +17,6 @@ const obj = {
 }
 
 const objnull = null
-
 
 // 获取数据
 test('get', () => {
@@ -43,10 +41,3 @@ test('gets', () => {
     y: 'a.b.c.d',
   })).toEqual({ x: { b: { c: { d: null } } }, y: null })
 })
-
-// 设置数据
-test('set', () => {
-  expect(set(obj, 'a/b/c/d', { e: null }, '/')).toEqual({ a: { b: { c: { d: { e: null } } } } })
-  expect(set(obj, 'a.b', { c: null })).toEqual({ a: { b: { c: null } } })
-})
-

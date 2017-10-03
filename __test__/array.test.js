@@ -15,9 +15,9 @@ const {
   findEqual,
 
   sortBy,
+  groupBy,
   countBy,
   indexBy,
-  groupBy,
 
   range,
   repeat,
@@ -195,7 +195,7 @@ test('repeat', () => {
 
 // 根据函数的返回值创建固定长度的数组
 test('repeatness', () => {
-  console.log('repeatness function return value is:', repeatness(() => Math.floor(Math.random() * 10) + 1, 10))
+  expect(repeatness(() => 1, 10)).toEqual([ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ])
 })
 
 // 根据校验器判断何时退出，创建从初始值到退出点的数组
