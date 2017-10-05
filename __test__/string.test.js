@@ -2,6 +2,8 @@ import util from '../src/index'
 
 const {
   capitalize,
+  upper,
+  lower,
   uniqueString,
   uniquePrefix,
   indexGenerator,
@@ -10,6 +12,14 @@ const {
 
 test('capitalize', () => {
   expect(capitalize('hello')).toEqual('Hello')
+})
+
+test('upper', () => {
+  expect(upper('hello')).toEqual('Hello')
+})
+
+test('lower', () => {
+  expect(lower('Hello')).toEqual('hello')
 })
 
 test('uniqueString', () => {

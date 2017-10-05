@@ -1,5 +1,9 @@
 const capitalize = str => str === undefined || str.length === 0 ? str : `${str[0].toUpperCase()}${str.slice(1)}`
 
+const upper = str => str === undefined || str.length === 0 ? str : `${str[0].toUpperCase()}${str.slice(1)}`
+
+const lower = str => str === undefined || str.length === 0 ? str : `${str[0].toLowerCase()}${str.slice(1)}`
+
 /* istanbul ignore next */
 const uniqueString = len => Math.random().toString(36).substr(2, len)
 // console.log(uniqueString(10))
@@ -19,6 +23,8 @@ const replace = content => (reg, handle) => content.replace(reg, handle)
 
 export {
   capitalize,
+  upper,
+  lower,
   uniqueString,
   uniquePrefix,
   indexGenerator,

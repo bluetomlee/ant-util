@@ -16,6 +16,8 @@
     "testif": "jest __test__/if.test.js",
     "testexist": "jest __test__/exist.test.js",
     "testassert": "jest __test__/assert.test.js",
+    "testobject": "jest __test__/object.test.js",
+    "teststring": "jest __test__/string.test.js",
     "jsdoc": "jsdoc src -r -c ./conf.json -d docs"
   },
   "pre-commit": [
@@ -68,8 +70,7 @@
       }
     },
     "coveragePathIgnorePatterns": [
-      "<rootDir>/src/plugins/dom.js",
-      "<rootDir>/src/core/object.js"
+      "<rootDir>/src/plugins/dom.js"
     ]
   }
 }
