@@ -1,7 +1,7 @@
 /*
  * 数组操作
  * */
-import { reduce, identity, pick, pairs, rename } from './object'
+import { reduce, identity, pick, unpairs, mapKey } from './object'
 
 // 查找元素
 const first = datas => datas[0]
@@ -18,7 +18,7 @@ const finder = (data, need) => data.reduce((last, next) => need(last, next) ? la
 const pluck = (datas, propertyName) => datas.map(data => data[propertyName])
 
 // 重命名
-const asname = (table, newNames) => table.map(data => rename(data, newNames))
+const asname = (table, newNames) => table.map(data => mapKey(data, newNames))
 
 // 查找表格
 const findColumn = (datas, columns) => datas.map(data => pick(data, columns))
@@ -26,7 +26,7 @@ const findColumn = (datas, columns) => datas.map(data => pick(data, columns))
 const findWhere = (datas, handle) => datas.filter(data => handle(data))
 
 const findEqual = (datas, where) => {
-  const wheres = pairs(where)
+  const wheres = unpairs(where)
   return datas.filter(data => wheres.every(([key, value]) => data[key] === value))
 }
 
