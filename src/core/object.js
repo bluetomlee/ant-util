@@ -19,7 +19,7 @@ const each = (obj, fn) => keys(obj).forEach((key, index) => (fn && fn(obj[key], 
 
 const reduce = (obj, handler, initial = {}) => keys(obj).reduce((last, key, index) => handler(last, obj[key], key, index), initial)
 
-const filter = (obj, handler) => reduce(obj, (last, value, key, index) => (handler(value, key, index) ? { ...last, [key]: value, } : last))
+const filter = (obj, handler) => reduce(obj, (last, value, key, index) => (handler(value, key, index) ? { ...last, [key]: value } : last))
 
 const mapKey = (obj, keymap) => reduce(obj, (last, value, key) => ({ ...last, [keymap[key] ? keymap[key] : key]: value }))
 
