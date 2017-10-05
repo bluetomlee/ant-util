@@ -1,6 +1,6 @@
 {
   "name": "ant-util",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "ant工具组件",
   "main": "dist/index.js",
   "scripts": {
