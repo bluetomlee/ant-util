@@ -2,12 +2,6 @@
 
 a javascript function expressions util and includes practical function used in dom.
 
-### document
-
-[ant-util document][1]
-
-*document building...*
-
 ### Features
 
 * an javascript util handle function,object,array,etc.
@@ -41,7 +35,7 @@ import { map } from 'ant-util/lib/object'
 $ git clone https://github.com/antgod/ant-util.git
 $ cd ant-util && npm install
 ```
-### Catalog
+### API Usage（Document is building, please waiting）
 
 * [functions][2]
 * [array][3]
