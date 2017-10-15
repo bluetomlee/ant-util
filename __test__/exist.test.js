@@ -16,6 +16,16 @@ const obj = {
   },
 }
 
+const objInline = {
+  a: {
+    'b.c': [
+      {
+        d: 1,
+      },
+    ],
+  },
+}
+
 const objnull = null
 
 // 获取数据
@@ -27,6 +37,10 @@ test('get', () => {
   expect(get(obj, 'a.b.c.d', 'default')).toEqual('default')
   expect(get(obj, 'a/b/c', undefined, '/')).toEqual({ d: null })
 
+  expect(get(objInline, "a['b.c']")).toEqual([{ d: 1 }])
+  expect(get(objInline, "a['b.c'][0].d")).toEqual(1)
+  expect(get(objInline, "a['b.c'][2].d.e")).toEqual(undefined)
+
   expect(get(objnull, 'a.b')).toEqual(undefined)
   expect(get(objnull, ['a', 'b'])).toEqual(undefined)
   expect(get(objnull, '')).toEqual({})
@@ -36,8 +50,8 @@ test('get', () => {
 
 // 批量批量获取
 test('gets', () => {
-  expect(gets(obj)({
+  expect(gets(obj, { y: 'default' })({
     x: 'a',
     y: 'a.b.c.d',
-  })).toEqual({ x: { b: { c: { d: null } } }, y: null })
+  })).toEqual({ x: { b: { c: { d: null } } }, y: 'default' })
 })

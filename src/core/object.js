@@ -45,13 +45,15 @@ const omit = (obj, names) => filter(obj, (value, key) => !names.includes(key))
 const pick = (obj, names) => filter(obj, (value, key) => names.includes(key))
 
 // 校验
+const isNull = obj => obj === undefined || obj === null
+
+const truthy = obj => !!obj && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
+
 const exist = (obj, type = 0) => {
   if (type === 0) return !!obj
   if (type === null) return obj !== undefined && obj !== null
   if (type) return !!obj && (typeof obj === 'object' ? !!keys(obj).length : true)
 }
-
-const truthy = obj => exist(obj) && (typeof obj === 'object' ? !!Object.keys(obj).length : true)
 
 // 默认值
 const setDefault = (current, defaultValue) => current || defaultValue
@@ -120,8 +122,9 @@ export {
   invert,
   omit,
   pick,
-  exist,
+  isNull,
   truthy,
+  exist,
   setDefault,
   mergeDefault,
   different,

@@ -20,8 +20,9 @@ const {
   invert,
   omit,
   pick,
-  exist,
+  isNull,
   truthy,
+  exist,
   setDefault,
   mergeDefault,
   different,
@@ -204,6 +205,28 @@ test('pick', () => {
   })
 })
 
+// 检测对象是否是null或者undefined
+test('isNull', () => {
+  expect(isNull(null)).toEqual(true)
+  expect(isNull(undefined)).toEqual(true)
+
+  expect(isNull({})).toEqual(false)
+  expect(isNull('')).toEqual(false)
+  expect(isNull(0)).toEqual(false)
+})
+
+// 检查对象是否为空
+test('truthy', () => {
+  expect(truthy(testObject)).toEqual(true)
+  expect(truthy(undefined)).toEqual(false)
+  expect(truthy(null)).toEqual(false)
+  expect(truthy('')).toEqual(false)
+  expect(truthy(0)).toEqual(false)
+
+  expect(truthy({})).toEqual(false)
+  expect(truthy([])).toEqual(false)
+})
+
 // 检测对象是否存在，能检测任何类型。包括三种模式：1.全模式，使用!!检查 2.空模式：检查对象是否为undefined或null 3.对象模式，检查对象是否为空
 test('exist', () => {
   expect(exist(testObject)).toEqual(true)
@@ -225,17 +248,6 @@ test('exist', () => {
   expect(exist([], 'object')).toEqual(false)
 })
 
-// 检查对象是否为空
-test('truthy', () => {
-  expect(truthy(testObject)).toEqual(true)
-  expect(truthy(undefined)).toEqual(false)
-  expect(truthy(null)).toEqual(false)
-  expect(truthy('')).toEqual(false)
-  expect(truthy(0)).toEqual(false)
-
-  expect(truthy({})).toEqual(false)
-  expect(truthy([])).toEqual(false)
-})
 
 // 设置对象默认值
 test('setDefault', () => {

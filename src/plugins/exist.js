@@ -1,14 +1,14 @@
-import { map, exist, setDefault } from '../core/object'
+import { map, isNull, setDefault } from '../core/object'
 
-const get = (obj, path, defaultValue, sep = '.') => {
-  const paths = Array.isArray(path) ? path : path.split(sep)
-  const result = paths.reduce((last, path) => {
-    return last && path ? last[path] : last
-  }, setDefault(obj, {}))
-  return exist(result, null) ? result : defaultValue || result
+const reg = /\.(?![^[\]]*\])|\[['"]?|['"]?\]/
+
+const get = (obj, path, defaultValue, sep) => {
+  const paths = Array.isArray(path) ? path : path.split(sep || reg)
+  const result = paths.reduce((last, path) => last && path ? last[path] : last, setDefault(obj, {}))
+  return isNull(result) ? defaultValue || result : result
 }
 
-const gets = (obj, defaultValue, sep = '.') => varPaths => map(varPaths, varPath => get(obj, varPath, defaultValue, sep))
+const gets = (obj, defaultValues = {}, sep = '.') => modelPaths => map(modelPaths, (modelPath, modelName) => get(obj, modelPath, defaultValues[modelName], sep))
 
 export { get, gets }
 
