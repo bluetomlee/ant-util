@@ -8,7 +8,7 @@ const get = (obj, path, defaultValue, sep) => {
   return isNull(result) ? defaultValue || result : result
 }
 
-const gets = (obj, defaultValues = {}, sep = '.') => modelPaths => map(modelPaths, (modelPath, modelName) => get(obj, modelPath, defaultValues[modelName], sep))
+const gets = (obj, defaultValues = {}, sep) => modelPaths => map(modelPaths, (modelPath, modelName) => get(obj, modelPath, defaultValues[modelName], sep))
 
 export { get, gets }
 
