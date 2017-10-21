@@ -1,6 +1,6 @@
 ## Ant Util
 
-a javascript function expressions util and includes practical function used in dom.
+a javascript function expressions util including practical function.
 
 ### Features
 
@@ -35,7 +35,7 @@ import { map } from 'ant-util/lib/object'
 $ git clone https://github.com/antgod/ant-util.git
 $ cd ant-util && npm install
 ```
-### API Usage（Document is building, please waiting）
+### API Usage（to be continue）
 
 * [functions][2]
 * [array][3]
