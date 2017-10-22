@@ -24,7 +24,7 @@ const {
   curryless,
   inject,
   choose,
-  grund,
+  guard,
   partial,
   partialLeft,
   complement,
@@ -416,18 +416,18 @@ test('choose', () => {
 })
 
 // 检测函数参数与根据条件渲染
-test('grund', () => {
+test('guard', () => {
   function setValue(object, path, value) {
     object[path] = value
     return 'setValue success'
   }
 
-  const finalSet = grund((object, path) => !!object && !!path, setValue, () => console.log('grund function args error'))
+  const finalSet = guard((object, path) => !!object && !!path, setValue, () => console.log('guard function args error'))
 
   const obj = {}
   expect(finalSet(obj, 'name', 'ant')).toEqual('setValue success')
 
-  const render = grund(true, args => `${args} right`, args => `${args} error`)
+  const render = guard(true, args => `${args} right`, args => `${args} error`)
   expect(render('render')).toEqual('render right')
 })
 

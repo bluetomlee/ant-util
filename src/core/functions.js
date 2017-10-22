@@ -65,7 +65,12 @@ const curryless = (fun) => {
 
 const choose = (...conditions) => (...values) => values.find((val, index) => exist(conditions[index]))
 
-const grund = (checker, handle, errorHandle) => (...args) => exer(checker)(...args) ? handle(...args) : errorHandle(...args)
+const guard = (checker, handle, errorHandle) => (...args) => exer(checker)(...args) ? handle(...args) : errorHandle(...args)
+
+const grund = (...args) => {
+  console.warn('`grund` is deprecated, please use `guard`.')
+  return guard(...args)
+}
 
 const partial = (fun, ...argv) => (...rest) => fun.call(this, ...rest, ...argv)
 
@@ -101,6 +106,7 @@ export {
   curryless,
   choose,
   grund,
+  guard,
   partial,
   partialLeft,
   inject,
