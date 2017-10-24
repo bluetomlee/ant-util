@@ -1,40 +1,47 @@
 import { map, isNull, setDefault } from '../core/object'
 
+/*
 // 字符分隔符
 const charSep = ''
 // []表达式正则
 const quotesReg = /['"[\]]/
 
 const parser = () => {
-  const setComplexState = (complex, state) => complex.isComplex = state
-  const clearComplex = complex => complex.expression.length = 0
+  const setComplexState = (memory, state) => memory.isComplex = state
+  const clearExpression = memory => memory.expression.length = 0
 
-  const complexCache = {
+  const memory = {
     isComplex: false,
     expression: [],
   }
 
   return (pathSet, sep = '.') => pathSet.split(charSep).reduce((paths, char) => {
     if (char === '[') {
-      setComplexState(complexCache, true)
+      setComplexState(memory, true)
     } else if (char === ']') {
-      const newPaths = paths.concat(complexCache.expression.join(charSep))
-      clearComplex(complexCache)
-      setComplexState(complexCache, false)
+      const newPaths = paths.concat(memory.expression.join(charSep))
+      clearExpression(memory)
+      setComplexState(memory, false)
       return newPaths
-    } else if (!complexCache.isComplex && char !== sep) {
-      return paths.concat(char)
-    } else if (complexCache.isComplex && !quotesReg.test(char)) {
-      complexCache.expression.push(char)
+    } else if (!memory.isComplex && char === sep) {
+      const newPaths = paths.concat(memory.expression.join(charSep))
+      clearExpression(memory)
+      return newPaths
+    } else if (!memory.isComplex && char !== sep) {
+      memory.expression.push(char)
+    } else if (memory.isComplex && !quotesReg.test(char)) {
+      memory.expression.push(char)
     }
     return paths
   }, [])
 }
 
 const transformer = parser()
+*/
+const reg = /\.(?![^[\]]*\])|\[['"]?|['"]?\]/
 
 const get = (obj, pathSet = '', defaultValue, sep) => {
-  const paths = Array.isArray(pathSet) ? pathSet : transformer(pathSet, sep)
+  const paths = Array.isArray(pathSet) ? pathSet : pathSet.split(sep || reg)
   const result = paths.reduce((last, path) => last && path ? last[path] : last, setDefault(obj, {}))
   return isNull(result) ? defaultValue || result : result
 }

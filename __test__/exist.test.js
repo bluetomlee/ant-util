@@ -26,6 +26,18 @@ const objInline = {
   },
 }
 
+/*
+const objKeys = {
+  abc: {
+    'bc.de': [
+      {
+        fg: 1,
+      },
+    ],
+  },
+}
+*/
+
 const objnull = null
 
 // 获取数据
@@ -40,7 +52,13 @@ test('get', () => {
   expect(get(objInline, "a['b.c']")).toEqual([{ d: 1 }])
   expect(get(objInline, 'a["b.c"][0].d')).toEqual(1)
   expect(get(objInline, "a['b.c'][2].d.e")).toEqual(undefined)
-  expect(get(objInline, "a['b.c'][0]/d", null, '/')).toEqual(1)
+  // expect(get(objInline, "a['b.c'][0]/d", null, '/')).toEqual(1)
+
+//  expect(get(objKeys, "abc['bc.de']")).toEqual([
+//    {
+//      fg: 1,
+//    },
+//  ])
 
   expect(get(objnull, 'a.b')).toEqual(undefined)
   expect(get(objnull, ['a', 'b'])).toEqual(undefined)
