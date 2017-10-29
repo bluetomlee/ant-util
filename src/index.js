@@ -6,7 +6,6 @@ import * as string from './core/string'
 import * as dom from './plugins/dom'
 import * as url from './plugins/url'
 import * as exist from './plugins/exist'
-import * as assert from './plugins/assert'
 
 export default {
   ...array,
@@ -17,6 +16,5 @@ export default {
     dom,
     url,
     exist,
-    assert,
   },
 }

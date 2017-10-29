@@ -26,7 +26,6 @@ const objInline = {
   },
 }
 
-/*
 const objKeys = {
   abc: {
     'bc.de': [
@@ -36,12 +35,12 @@ const objKeys = {
     ],
   },
 }
-*/
 
 const objnull = null
 
 // 获取数据
 test('get', () => {
+  console.time('aaa')
   expect(get(obj, 'a.b')).toEqual({ c: { d: null } })
   expect(get(obj, ['a', 'b'])).toEqual({ c: { d: null } })
   expect(get(obj, '')).toEqual({ a: { b: { c: { d: null } } } })
@@ -51,24 +50,22 @@ test('get', () => {
 
   expect(get(objInline, "a['b.c']")).toEqual([{ d: 1 }])
   expect(get(objInline, 'a["b.c"][0].d')).toEqual(1)
-  expect(get(objInline, "a['b.c'][2].d.e")).toEqual(undefined)
-  // expect(get(objInline, "a['b.c'][0]/d", null, '/')).toEqual(1)
+  expect(get(objInline, "a.b['c'][2].d.e")).toEqual(undefined)
+  expect(get(objInline, "a['b.c'][0]/d", null, '/')).toEqual(1)
 
-//  expect(get(objKeys, "abc['bc.de']")).toEqual([
-//    {
-//      fg: 1,
-//    },
-//  ])
+  expect(get(objKeys, "abc['bc.de']")).toEqual([{ fg: 1 }])
 
   expect(get(objnull, 'a.b')).toEqual(undefined)
   expect(get(objnull, ['a', 'b'])).toEqual(undefined)
   expect(get(objnull, '')).toEqual({})
   expect(get(objnull, 'a.b.c.d')).toEqual(undefined)
   expect(get(objnull, 'a.b.c.d', 'default')).toEqual('default')
+  console.timeEnd('aaa')
 })
 
 // 批量批量获取
 test('gets', () => {
+  console.time('bbb')
   expect(gets(obj, { y: 'default' })({
     x: 'a',
     y: 'a.b.c.d',
@@ -78,4 +75,5 @@ test('gets', () => {
     x: "a['b.c'][0]",
     y: "a['b.c'][1].d",
   })).toEqual({ x: { d: 1 }, y: undefined })
+  console.timeEnd('bbb')
 })

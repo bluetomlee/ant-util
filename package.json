@@ -1,6 +1,6 @@
 {
   "name": "ant-util",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "ant工具组件",
   "main": "dist/index.js",
   "scripts": {
@@ -15,7 +15,6 @@
     "testarray": "jest __test__/array.test.js",
     "testif": "jest __test__/if.test.js",
     "testexist": "jest __test__/exist.test.js",
-    "testassert": "jest __test__/assert.test.js",
     "testobject": "jest __test__/object.test.js",
     "teststring": "jest __test__/string.test.js",
     "jsdoc": "jsdoc src -r -c ./conf.json -d docs"
