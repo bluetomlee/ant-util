@@ -27,7 +27,7 @@ const {
   guard,
   partial,
   partialLeft,
-  complement,
+  not,
 } = util
 
 // 其他函数
@@ -489,9 +489,9 @@ test('inject', () => {
 })
 
 // 在原函数参数右侧注入参数
-test('complement', () => {
+test('not', () => {
   const isOdd = n => n % 2 !== 0
-  const isEven = complement(isOdd)
+  const isEven = not(isOdd)
 
   expect(isEven(1)).toEqual(false)
   expect(isEven(2)).toEqual(true)

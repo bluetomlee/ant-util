@@ -4,14 +4,18 @@ import util from '../src/index'
 const {
   invoke,
   exec,
+  choose,
   match,
   concat,
   some,
-  grund,
+  guard,
+  allness,
 } = util
 
 const {
-  complement,
+  always,
+  not,
+  exist,
 } = util
 
 const returnCreator = (handle, args) => `${handle} function ${args} return value`
@@ -50,6 +54,31 @@ test('invoke', () => {
   result(500, { success: false })
 })
 
+// 检测函数参数
+test('guard', () => {
+  function setValue(object, path, value) {
+    object[path] = value
+    return 'setValue success'
+  }
+
+  const success = true
+  const result = guard(success, always('success'), always('failure'))
+  expect(result()).toEqual('success')
+
+  const finalSet = guard((object, name, age) => allness(exist(name), exist(age)), setValue, () => 'guard function args error')
+
+  const obj = {
+    name: 'lhj',
+    age: undefined,
+  }
+  expect(finalSet(obj, obj.name, obj.age)).toEqual('guard function args error')
+
+  obj.age = 30
+
+  expect(finalSet(obj, obj.name, obj.age)).toEqual('setValue success')
+})
+
+
 // 根据某个条件执行函数
 test('exec', () => {
   const array = []
@@ -75,11 +104,23 @@ test('exec', () => {
   }
 
   // 数组为空，不会执行回调函数
-  expect(exec(complement(isNull)(array), callback)(array)).toEqual(undefined)
+  expect(exec(not(isNull)(array), callback)(array)).toEqual(undefined)
 
   // 数组不为空，执行回调函数
   array.push('exec function initiation args')
-  expect(exec(complement(isNull)(array), callback)(array)).toEqual('exec function return value')
+  expect(exec(not(isNull)(array), callback)(array)).toEqual('exec function return value')
+})
+
+// 根据传入的条件集判断是否执行函数，可以完全代替if
+test('choose', () => {
+  const conditions = [false, false, false, true, false, true]
+  const values = [1, 2, 3, 4, 5]
+  expect(choose(...conditions)(...values)).toEqual(4)
+
+  const flag = 2
+  const conditions2 = [allness(flag === 1), allness(flag === 2), allness(flag === 3)]
+
+  expect(choose(...conditions2)(...['x', 'y', 'z'])).toEqual('y')
 })
 
 // 根据传入的条件集判断是否执行函数，可以完全代替if
@@ -144,16 +185,4 @@ test('some', () => {
 
   // 返回第一个有返回的函数second的返回值
   expect(some(first, second, third)('some function initiation args')).toEqual(returns.second)
-})
-
-// 检测函数参数
-test('grund', () => {
-  function setValue(object, path, value) {
-    object[path] = value
-    return 'setValue success'
-  }
-
-  const finalSet = grund((object, path) => !!object && !!path, setValue, () => console.log('grund function args error'))
-  const obj = {}
-  expect(finalSet(obj, 'name', 'ant')).toEqual('setValue success')
 })

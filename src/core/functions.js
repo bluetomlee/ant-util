@@ -81,7 +81,12 @@ const inject = (fun, createArgsToInject, spread = false) => (...args) => {
   return spread ? fun(...injectArgs, ...args) : fun(injectArgs, ...args)
 }
 
-const complement = fun => (...args) => !fun(...args)
+const not = fun => (...args) => !fun(...args)
+
+const complement = (...args) => {
+  console.warn('`complement` is deprecated, please use `not`.')
+  return not(...args)
+}
 
 export {
   translate,
@@ -110,5 +115,6 @@ export {
   partial,
   partialLeft,
   inject,
+  not,
   complement,
 }

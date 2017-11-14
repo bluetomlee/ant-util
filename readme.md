@@ -16,7 +16,7 @@ a javascript function expressions util including practical function.
 npm install ant-util --save
 ```
 ### Usage
-```
+```js
 import util from 'ant-util'
 const { map } = util
 
@@ -26,7 +26,7 @@ map({ name: 'ant', age: 13 }, (value, key) => `my ${key} is ${value}`)
 ```
 
 Ant import style manually:
-```
+```js
 import { map } from 'ant-util/lib/object'
 ```
 
