@@ -64,7 +64,7 @@ const transformer = parser()
 const get = (obj, pathsString = '', defaultValue, sep) => {
   const paths = Array.isArray(pathsString) ? pathsString : transformer(pathsString, sep)
   const result = paths.reduce((last, path) => last && path ? last[path] : last, setDefault(obj, {}))
-  return isNull(result) ? defaultValue || result : result
+  return isNull(result) && defaultValue !== undefined ? defaultValue : result
 }
 
 const gets = (obj, defaultValues = {}, sep) => modelPaths =>

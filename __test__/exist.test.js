@@ -75,5 +75,6 @@ test('gets', () => {
     x: "a['b.c'][0]",
     y: "a['b.c'][1].d",
   })).toEqual({ x: { d: 1 }, y: undefined })
+
   console.timeEnd('bbb')
 })
