@@ -1,7 +1,8 @@
 /*
  * 函数操作
  * */
-import { exist } from './object'
+import { finder } from './array'
+import { exist, identity } from './object'
 
 /* 加工 */
 const translate = (fun, ...args) => new Function(...args, `return ${fun}`)()
@@ -30,6 +31,8 @@ const invoker = name => (target, ...args) => {
 }
 
 const match = actions => (...args) => actions.map(({ condition, action }) => (exec(condition, action)(...args)))
+
+const matchOne = actions => (...args) => finder(match(actions)(...args), identity)
 
 /* 判断 */
 const all = (...funs) => (condition, ...args) => funs.reduce((truth, fun) => (truth && exer(fun)(...args) === condition), true)
@@ -98,6 +101,7 @@ export {
   invoke,
   invoker,
   match,
+  matchOne,
   all,
   any,
   allness,

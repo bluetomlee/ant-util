@@ -11,6 +11,7 @@ const {
   invoke,
   invoker,
   match,
+  matchOne,
   all,
   any,
   allness,
@@ -209,6 +210,35 @@ test('match', () => {
   ]
 
   expect(finder(match(mapEasy)(), curry1(exist))).toEqual(cond)
+})
+
+// 根据传入的条件集判断是否执行函数,只会返回第一个满足条件的结果，可以完全代替if
+test('matchOne', () => {
+  const returns = returnAPICreator('matchone', ['first', 'second', 'third'])
+
+  const first = (...args) => {
+    console.log(...args)
+    return returns.first
+  }
+  const second = (...args) => {
+    console.log(...args)
+    return returns.second
+  }
+  const third = (...args) => {
+    console.log(...args)
+    return returns.third
+  }
+  const fns = { first, second, third }
+
+  const mapCreator = code => [
+    { condition: code === 1, action: fns.first },
+    { condition: code === 2, action: fns.second },
+    { condition: code > 1, action: fns.third },
+  ]
+
+  // 执行条件 code === 2 与 code > 1的函数second， third
+  const code = 2
+  expect(matchOne(mapCreator(code))('match function initiation args')).toEqual(returns.second)
 })
 
 // 所有值或函数都返回某个条件，会返回true，否则返回false

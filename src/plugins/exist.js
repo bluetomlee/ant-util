@@ -71,4 +71,19 @@ const gets = (obj, defaultValues = {}, sep) => modelPaths =>
   map(modelPaths, (modelPath, modelName) =>
     get(obj, modelPath, defaultValues[modelName], sep))
 
-export { get, gets }
+const set = (obj, pathsString = '', value, sep) => {
+  const paths = Array.isArray(pathsString) ? pathsString : transformer(pathsString, sep)
+  paths.reduce((last, path, index) => {
+    let partical = last && last[path]
+    // 如果当前遍历不是最后节点，且当前节点为空
+    if (index < paths.length - 1 && (typeof partical !== 'object' || partical === null)) {
+      last[path] = isNaN(paths[index + 1]) ? {} : []
+      partical = last[path]
+    } else if (index === paths.length - 1) {
+      last[path] = value
+    }
+    return partical
+  }, obj || {})
+}
+
+export { get, gets, set }

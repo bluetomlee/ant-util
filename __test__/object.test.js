@@ -31,6 +31,8 @@ const {
   removeItem,
   deepEach,
   walk,
+  walkAll,
+  rename,
 } = util
 
 // 其他函数
@@ -107,20 +109,20 @@ test('each', () => {
 test('reduce', () => {
   expect(reduce(testObject, (last, item, key, index) =>
     ({ ...last, [key]: `${item}${key}${index}` }), testInitial)).toEqual({
-    a: 'a1a0',
-    b: 'b1b1',
-    c: 'c1c2',
-    ...testInitial,
-  })
+      a: 'a1a0',
+      b: 'b1b1',
+      c: 'c1c2',
+      ...testInitial,
+    })
 })
 
 // 对象过滤
 test('filter', () => {
   expect(filter(testObject, (item, key, index) =>
     (key === 'a' || index === 2), testInitial)).toEqual({
-    a: 'a1',
-    c: 'c1',
-  })
+      a: 'a1',
+      c: 'c1',
+    })
 })
 
 // map键
@@ -248,7 +250,6 @@ test('exist', () => {
   expect(exist([], 'object')).toEqual(false)
 })
 
-
 // 设置对象默认值
 test('setDefault', () => {
   expect(setDefault(undefined, testObject)).toEqual(testObject)
@@ -318,17 +319,46 @@ test('removeItem', () => {
   expect(arr).toEqual([1, 2, 3, 5, 2, 1])
 })
 
-// 深入遍历每一项
+// 深度遍历每一项
 test('deepEach', () => {
   deepEach(testDeepObject, (value, key) => {
     console.log(key, value)
   })
 })
 
-// 深入遍历每一项
+// 深度遍历每一项，需要指定遍历键名
 test('walk', () => {
   walk(testDeepObject, 'children', (item, i, parentPath) => {
     console.log(parentPath)
     return i
   })
+})
+
+// 深度遍历每一项，无需指定遍历键名
+test('walkAll', () => {
+  walkAll(testDeepObject, (item, i) => {
+    console.log(item, i)
+    return i
+  })
+})
+
+
+const table = [{ title: 't1', name: 'n1', age: 30 }, { title: 't2', name: 'n2', age: 40 }, { title: 't3', age: 50 }]
+
+// 重命名
+test('rename', () => {
+  expect(rename(testObject, {
+    a: 'x',
+    b: 'y',
+  })).toEqual({
+    x: 'a1',
+    y: 'b1',
+    c: 'c1',
+  })
+
+  expect(rename(table, { title: 'tit' })).toEqual([
+    { name: 'n1', age: 30, tit: 't1' },
+    { name: 'n2', age: 40, tit: 't2' },
+    { age: 50, tit: 't3' },
+  ])
 })

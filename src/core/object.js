@@ -2,6 +2,7 @@
  * 对象操作
  * */
 import { upper } from './string'
+import { asname } from './array'
 
 const keys = Object.keys
 const toString = Object.prototype.toString
@@ -94,12 +95,29 @@ const deepEach = (obj, fn) =>
     }
   })
 
+// 递归指定的键
 const walk = (obj, childrenName, handler, i = 0, parentPath = []) => {
   const customPath = handler(obj, i, parentPath)
   if (obj[childrenName] !== undefined && Array.isArray(obj[childrenName])) {
     obj[childrenName].forEach((child, index) =>
       walk(child, childrenName, handler, index, parentPath.concat(childrenName, customPath)))
   }
+}
+
+// 递归所有的键
+const walkAll = (obj, handler, parentPath = [], i = 0) => {
+  handler(obj, parentPath, i)
+  Object.keys(obj).forEach((key, index) => typeof obj[key] === 'object' && (walkAll(obj[key], handler, parentPath.concat(key), index)))
+}
+
+// 重命名
+const rename = (value, rn) => {
+  if (rn === undefined || typeof value !== 'object') {
+    return value
+  } else if (Array.isArray(value)) {
+    return asname(value, rn)
+  }
+  return mapKey(value, rn)
 }
 
 export {
@@ -133,5 +151,7 @@ export {
   removeItem,
   deepEach,
   walk,
+  walkAll,
+  rename,
 }
 

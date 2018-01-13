@@ -4,6 +4,7 @@ import util from '../src/index'
 const {
   get,
   gets,
+  set,
 } = util.plugins.exist
 
 const obj = {
@@ -40,7 +41,6 @@ const objnull = null
 
 // 获取数据
 test('get', () => {
-  console.time('aaa')
   expect(get(obj, 'a.b')).toEqual({ c: { d: null } })
   expect(get(obj, ['a', 'b'])).toEqual({ c: { d: null } })
   expect(get(obj, '')).toEqual({ a: { b: { c: { d: null } } } })
@@ -60,12 +60,10 @@ test('get', () => {
   expect(get(objnull, '')).toEqual({})
   expect(get(objnull, 'a.b.c.d')).toEqual(undefined)
   expect(get(objnull, 'a.b.c.d', 'default')).toEqual('default')
-  console.timeEnd('aaa')
 })
 
-// 批量批量获取
+// 批量获取
 test('gets', () => {
-  console.time('bbb')
   expect(gets(obj, { y: 'default' })({
     x: 'a',
     y: 'a.b.c.d',
@@ -75,6 +73,22 @@ test('gets', () => {
     x: "a['b.c'][0]",
     y: "a['b.c'][1].d",
   })).toEqual({ x: { d: 1 }, y: undefined })
-
-  console.timeEnd('bbb')
 })
+
+// 设置数据
+test('set', () => {
+  const objClone = Object.assign({}, obj)
+  set(objClone, 'a.b.c.d.e', 'test')
+  expect(objClone).toEqual({
+    a: {
+      b: {
+        c: {
+          d: {
+            e: 'test',
+          },
+        },
+      },
+    },
+  })
+})
+
