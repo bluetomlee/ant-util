@@ -1,4 +1,126 @@
-/**
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: core/array.js</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true,"includeDate":false},"applicationName":"Demo","disqus":"","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"","description":"","keyword":""},"outputSourceFiles":false,"outputSourcePath":true,"collapseSymbols":false,"inverseNav":false,"protocol":"html://","methodHeadingReturns":true};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">Demo</a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="module:array">
+            <span class="title">
+                <a href="module-array.html">module:array</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="module:array~first"><a href="module-array.html#~first">first</a></li>
+            
+                <li data-name="module:array~last"><a href="module-array.html#~last">last</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="module:function">
+            <span class="title">
+                <a href="module-function.html">module:function</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="module:function~match"><a href="module-function.html#~match">match</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="module:object">
+            <span class="title">
+                <a href="module-object.html">module:object</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="core_array.js.html">Source: core/array.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source "><code>/**
  * The operator of array include:
  * 1. Search result of the array by condition like where of sql.
  * 2. Rename column's name of item of array.
@@ -62,7 +184,7 @@ const groupBy = (datas, fn) => datas.reduce((last, data) => ({ ...last, [`${fn(d
 // 创建
 const range = (times) => {
   const ranges = []
-  for (let idx = 0; idx < times; idx++) {
+  for (let idx = 0; idx &lt; times; idx++) {
     ranges.push(idx)
   }
   return ranges
@@ -88,7 +210,7 @@ const iterate = (valueCreator, checker, init) => {
 const toObject = (datas, pluck = value => value) => datas.reduce((last, next) => ({ ...last, [pluck(next)]: next }), {})
 
 // 对比
-const diff = (arr1, arr2) => arr1.length === arr2.length && arr1.every(value => arr2.includes(value)) && arr2.every(value => arr1.includes(value))
+const diff = (arr1, arr2) => arr1.length === arr2.length &amp;&amp; arr1.every(value => arr2.includes(value)) &amp;&amp; arr2.every(value => arr1.includes(value))
 
 const subtract = (all, some) => all.reduce((output, name) => (!some.includes(name) ? output.concat(name) : output), [])
 
@@ -182,3 +304,24 @@ export {
 
   chain,
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 14 2018 23:26:39 GMT+0800 (CST)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

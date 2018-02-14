@@ -1,4 +1,5 @@
-import { map, isNull, setDefault } from '../core/object'
+import { map, isNull, setDefault, rename } from '../core/object'
+import { last } from '../core/array'
 
 const CHAR_SEP = ''
 const PATH_SEP = '.'
@@ -86,4 +87,24 @@ const set = (obj, pathsString = '', value, sep) => {
   }, obj || {})
 }
 
-export { get, gets, set }
+const walkFunction = (obj, handler, parentPath = [], i = 0) => {
+  handler(obj, parentPath, i)
+  Object.keys(obj).forEach((key, index) => (typeof obj[key] === 'object' || typeof obj[key] === 'function') && (walkFunction(obj[key], handler, parentPath.concat(key), index)))
+}
+
+const getsMap = (obj, json, isPlain = false) => {
+  const result = {}
+  walkFunction(json, (strategy, path) => {
+    if (typeof strategy === 'function') {
+      const { as, dv, rn, val } = strategy(get(obj, path))
+      if (isPlain) {
+        result[as || last(path)] = val !== undefined ? val : rename(get(obj, path, dv), rn)
+      } else {
+        set(result, as ? path.slice(0, path.length - 1).concat(as) : path, val !== undefined ? val : rename(get(obj, path, dv), rn))
+      }
+    }
+  })
+  return result
+}
+
+export { get, gets, getsMap, set }

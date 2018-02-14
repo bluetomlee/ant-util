@@ -1,6 +1,6 @@
 {
   "name": "ant-util",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "ant工具组件",
   "main": "dist/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "testexist": "jest __test__/exist.test.js",
     "testobject": "jest __test__/object.test.js",
     "teststring": "jest __test__/string.test.js",
-    "jsdoc": "jsdoc src -r -c ./conf.json -d docs"
+    "doc": "jsdoc -c ./conf.json -R readme.md"
   },
   "pre-commit": [
     "lint"

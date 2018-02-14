@@ -1,6 +1,8 @@
-/*
- * 对象操作
- * */
+/**
+ * The operator of object include:
+ * @module object
+ * @see examples: {@link https://github.com/antgod/ant-util/blob/master/__test__/object.test.js}
+ */
 import { upper } from './string'
 import { asname } from './array'
 

@@ -1,6 +1,8 @@
-/*
- * 函数操作
- * */
+/**
+ * The operator of function include:
+ * @module function
+ * @see examples: {@link https://github.com/antgod/ant-util/blob/master/__test__/functions.test.js}
+ */
 import { finder } from './array'
 import { exist, identity } from './object'
 
@@ -30,6 +32,20 @@ const invoker = name => (target, ...args) => {
   return exec(targetMethod, targetMethod.bind(target))(...args)
 }
 
+ /**
+ * High-level functions used to get a group of judgment.It can also replace any conditional statement(eg: if/switch)
+ * @function match
+ * @param {Array} actions - an json array include two key: condition,action.
+ * @return {Function} an handle need to pass arguments to every action
+ *
+ * @example
+ * const mapCreator = code => [
+ *   { condition: code === 1, action: fns.first },
+ *   { condition: code === 2, action: fns.second },
+ *   { condition: code > 1, action: fns.third },
+ * ]
+ * match(mapCreator(2))(arguments) => [undefined, fns.second(arguments), undefined]
+ */
 const match = actions => (...args) => actions.map(({ condition, action }) => (exec(condition, action)(...args)))
 
 const matchOne = actions => (...args) => finder(match(actions)(...args), identity)

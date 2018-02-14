@@ -1,10 +1,13 @@
 import util from '../src/index'
 
+const { always } = util
+
 // 数组API
 const {
   get,
   gets,
   set,
+  getsMap,
 } = util.plugins.exist
 
 const obj = {
@@ -89,6 +92,78 @@ test('set', () => {
         },
       },
     },
+  })
+})
+
+const testDeepObject = {
+  a1: [{
+    x1: [{
+      x2: {
+        success: false,
+        errorMessage: '网络异常，请稍后再试',
+        userElement: {
+          userName: 'lhj',
+          userPass: 'a111111',
+        },
+      },
+    }],
+  }],
+  b1: {
+    c1: {
+      success: true,
+      errorMessage: '网络异常，请稍后',
+      userList: [{
+        userName: 'lhj',
+        userPass: 'a111111',
+      }],
+    },
+  },
+}
+
+const mapper = {
+  a1: [{
+    x1: [{
+      x2: {
+        success: (item) => {
+          console.log(item)
+          return {
+            val: {
+              test: 'you are the best',
+            },
+          }
+        },
+        errorMessage: always({ as: 'resultMsg' }),
+        success1: always({ dv: 'success1' }),
+        success2: always({ dv: [{ s: 's2' }], rn: { s: 's2' } }),
+      },
+    }],
+  }],
+}
+
+// 根据json声明获取数据
+test('getsMap', () => {
+  expect(getsMap(testDeepObject, mapper, true)).toEqual({
+    success: { test: 'you are the best' },
+    resultMsg: '网络异常，请稍后再试',
+    success1: 'success1',
+    success2: [{ s2: 's2' }],
+  })
+
+  expect(getsMap(testDeepObject, mapper)).toEqual({
+    a1: [{
+      x1: [{
+        x2: {
+          success: {
+            test: 'you are the best',
+          },
+          resultMsg: '网络异常，请稍后再试',
+          success1: 'success1',
+          success2: [{
+            s2: 's2',
+          }],
+        },
+      }],
+    }],
   })
 })
 
